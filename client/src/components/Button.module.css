@@ -1,0 +1,106 @@
+.button {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 6px 16px;
+  border: 1px solid transparent;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: opacity 150ms, background-color 150ms, border-color 150ms;
+}
+
+.button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.sm {
+  min-height: 28px;
+  padding: 3px 12px;
+  font-size: 13px;
+  gap: 4px;
+}
+
+.primary {
+  background: var(--rootsdk-text-primary);
+  color: var(--rootsdk-background-tertiary);
+}
+
+.primary:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.secondary {
+  background: transparent;
+  color: var(--rootsdk-text-primary);
+  border-color: var(--rootsdk-text-tertiary);
+}
+
+.secondary:hover:not(:disabled) {
+  background: var(--rootsdk-highlight-light);
+}
+
+.danger {
+  background: var(--rootsdk-error);
+  color: var(--rootsdk-text-white);
+}
+
+.danger:hover:not(:disabled) {
+  opacity: 0.8;
+}
+
+.quiet {
+  background: var(--rootsdk-highlight-light);
+  color: var(--rootsdk-text-primary);
+  border-radius: var(--tp-radius-md);
+}
+
+.quiet:hover:not(:disabled) {
+  background: var(--rootsdk-highlight-normal);
+}
+
+.iconButton {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--tp-radius-sm);
+  background: transparent;
+  color: var(--rootsdk-text-tertiary);
+  cursor: pointer;
+  transition: background-color 150ms, color 150ms;
+}
+
+.iconButton:hover:not(:disabled) {
+  background: var(--rootsdk-highlight-strong);
+  color: var(--rootsdk-text-primary);
+}
+
+.iconButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.iconDanger {
+  color: var(--rootsdk-error);
+}
+
+.iconDanger:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--rootsdk-error) 12%, transparent);
+  color: var(--rootsdk-error);
+}

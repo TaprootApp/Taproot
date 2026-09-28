@@ -1,0 +1,510 @@
+syntax = "proto3";
+
+import "rootsdk/types.proto";
+
+// ============================================================================
+// Taproot client <-> server contract.
+//
+// Conventions:
+//   - Times are epoch milliseconds in `double` fields named *_at_ms.
+//   - Durations are milliseconds in `duration_ms`; 0 means "no duration".
+//   - Every RPC checks the caller's StaffLevel on the server. The level
+//     required is noted on each RPC. Failures throw TaprootError.
+//   - Broadcast* RPCs are server -> client events carrying a ChangeEvent;
+//     clients refetch whatever they display.
+// ============================================================================
+
+enum TaprootError {
+  TAPROOT_ERROR_UNSPECIFIED = 0;
+  TAPROOT_ERROR_NOT_AUTHORIZED = 1;
+  TAPROOT_ERROR_INVALID_INPUT = 2;
+  TAPROOT_ERROR_NOT_FOUND = 3;
+  // Root rejected the action (permissions, protected member, rate limit).
+  // The exception message explains it in plain words.
+  TAPROOT_ERROR_ACTION_FAILED = 4;
+}
+
+// Same numbering as Level in server/src/permissions.ts.
+enum StaffLevel {
+  STAFF_LEVEL_MEMBER = 0;
+  STAFF_LEVEL_MODERATOR = 1;
+  STAFF_LEVEL_ADMIN = 2;
+  STAFF_LEVEL_OWNER = 3;
+}
+
+// ---------------------------------------------------------------------------
+// Shared lookups
+// ---------------------------------------------------------------------------
+
+message ChannelInfo {
+  string id = 1;
+  string name = 2;
+  string group_name = 3;
+}
+
+message ChannelList {
+  repeated ChannelInfo channels = 1;
+}
+
+message RoleInfo {
+  string id = 1;
+  string name = 2;
+  string color_hex = 3;
+  // Carries staff permissions (kick, ban, manage roles, full control...).
+  // Privileged roles can't be self-assigned or put on reaction panels.
+  bool privileged = 4;
+}
+
+message RoleList {
+  repeated RoleInfo roles = 1;
+}
+
+message MemberRef {
+  string user_id = 1;
+  string nickname = 2;
+}
+
+message MemberList {
+  repeated MemberRef members = 1;
+}
+
+// Payload of the Broadcast* RPCs. Clients refetch what they display.
+message ChangeEvent {
+  // Which area changed, e.g. "general", "welcome", "automod", "cases",
+  // "commands", "panels", "announcements", "selfroles", "reminders".
+  string area = 1;
+}
+
+message IdRequest {
+  int32 id = 1;
+}
+
+message UserRequest {
+  string user_id = 1;
+}
+
+// ---------------------------------------------------------------------------
+// SessionService: who am I, plus pickers' data. Implemented in
+// server/src/services/sessionService.ts.
+// ---------------------------------------------------------------------------
+
+message Session {
+  StaffLevel level = 1;
+  string user_id = 2;
+  string nickname = 3;
+  string community_name = 4;
+  string prefix = 5;
+}
+
+service SessionService {
+  // Anyone.
+  rpc GetSession(rootsdk.Void) returns (Session);
+  // Moderator+. Channels Taproot can see.
+  rpc ListChannels(rootsdk.Void) returns (ChannelList);
+  // Anyone (members need names for self roles). Excludes @everyone.
+  rpc ListRoles(rootsdk.Void) returns (RoleList);
+}
+
+// ---------------------------------------------------------------------------
+// ConfigService: everything in server/src/settings.ts. Admin only.
+// Implemented in server/src/services/configService.ts.
+// ---------------------------------------------------------------------------
+
+message GeneralConfig {
+  string prefix = 1;
+  optional string mod_log_channel_id = 2;
+  repeated string self_role_ids = 3;
+}
+
+message WelcomeConfig {
+  optional string welcome_channel_id = 1;
+  string welcome_message = 2;
+  optional string goodbye_channel_id = 3;
+  string goodbye_message = 4;
+  repeated string autorole_ids = 5;
+}
+
+message AutomodRules {
+  bool enabled = 1;
+  bool words_enabled = 2;
+  repeated string words = 3;
+  bool links_enabled = 4;
+  repeated string allowed_domains = 5;
+  bool mentions_enabled = 6;
+  int32 max_mentions = 7;
+  bool block_all_mentions = 8;
+  bool spam_enabled = 9;
+  int32 spam_messages = 10;
+  int32 spam_seconds = 11;
+  int32 spam_duplicates = 12;
+  bool caps_enabled = 13;
+  int32 caps_percent = 14;
+  int32 caps_min_length = 15;
+  int32 strike_count = 16;
+  int32 strike_window_minutes = 17;
+  int32 strike_mute_minutes = 18;
+  repeated string ignored_channel_ids = 19;
+}
+
+message Config {
+  GeneralConfig general = 1;
+  WelcomeConfig welcome = 2;
+  AutomodRules automod = 3;
+}
+
+message PreviewRequest {
+  string template = 1;
+}
+
+message PreviewResponse {
+  // The template rendered for the caller, as message markdown.
+  string content = 1;
+}
+
+service ConfigService {
+  rpc GetConfig(rootsdk.Void) returns (Config);
+  // Each Update replaces that whole section and returns the new Config.
+  rpc UpdateGeneral(GeneralConfig) returns (Config);
+  rpc UpdateWelcome(WelcomeConfig) returns (Config);
+  rpc UpdateAutomod(AutomodRules) returns (Config);
+  // Renders a welcome/goodbye template for the caller without posting.
+  rpc PreviewTemplate(PreviewRequest) returns (PreviewResponse);
+
+  // Broadcast to all clients after any config change (GUI or command).
+  rpc BroadcastConfigChanged(ChangeEvent) returns (rootsdk.Void);
+}
+
+// ---------------------------------------------------------------------------
+// ModerationService: cases, members, actions. Moderator+ unless noted.
+// Implemented in server/src/services/moderationService.ts.
+// ---------------------------------------------------------------------------
+
+enum CaseAction {
+  CASE_ACTION_UNSPECIFIED = 0;
+  CASE_ACTION_WARN = 1;
+  CASE_ACTION_MUTE = 2;
+  CASE_ACTION_UNMUTE = 3;
+  CASE_ACTION_KICK = 4;
+  CASE_ACTION_BAN = 5;
+  CASE_ACTION_UNBAN = 6;
+  CASE_ACTION_PURGE = 7;
+  CASE_ACTION_LOCK = 8;
+  CASE_ACTION_UNLOCK = 9;
+  CASE_ACTION_AUTOMOD = 10;
+}
+
+enum PunishmentType {
+  PUNISHMENT_TYPE_UNSPECIFIED = 0;
+  PUNISHMENT_TYPE_MUTE = 1;
+  PUNISHMENT_TYPE_KICK = 2;
+  PUNISHMENT_TYPE_BAN = 3;
+}
+
+message ModCase {
+  int32 id = 1;
+  CaseAction action = 2;
+  // For channel actions (purge/lock/unlock) this is the channel or group ID
+  // and user_name is its display label.
+  string user_id = 3;
+  string user_name = 4;
+  // Empty for automatic actions.
+  string moderator_id = 5;
+  string moderator_name = 6;
+  string reason = 7;
+  double duration_ms = 8;
+  bool voided = 9;
+  double created_at_ms = 10;
+}
+
+message ListCasesRequest {
+  optional string user_id = 1;
+  // UNSPECIFIED = all actions.
+  CaseAction action = 2;
+  // Page backwards from this case ID (exclusive). 0 = newest.
+  int32 before_id = 3;
+  // 1-100; 0 means the default of 25.
+  int32 limit = 4;
+}
+
+message CaseList {
+  repeated ModCase cases = 1;
+  bool has_more = 2;
+}
+
+message MemberSearchRequest {
+  // Case-insensitive nickname substring, or an exact user ID.
+  string query = 1;
+}
+
+message MemberDetail {
+  string user_id = 1;
+  string nickname = 2;
+  double joined_at_ms = 3;
+  repeated RoleInfo roles = 4;
+  StaffLevel level = 5;
+  int32 active_warnings = 6;
+  bool muted = 7;
+  // 0 when muted indefinitely or not muted.
+  double mute_expires_at_ms = 8;
+  bool banned = 9;
+  // Newest first, up to 20.
+  repeated ModCase recent_cases = 10;
+  // False if the member has left (details come from the last known name).
+  bool in_community = 11;
+}
+
+message ActiveMute {
+  string user_id = 1;
+  string nickname = 2;
+  double expires_at_ms = 3;
+  int32 case_id = 4;
+}
+
+message MuteList {
+  repeated ActiveMute mutes = 1;
+}
+
+message BanInfo {
+  string user_id = 1;
+  string nickname = 2;
+  string reason = 3;
+  double expires_at_ms = 4;
+}
+
+message BanList {
+  repeated BanInfo bans = 1;
+}
+
+message ModActionRequest {
+  string user_id = 1;
+  string reason = 2;
+  // Mute and ban only; 0 = indefinite/permanent.
+  double duration_ms = 3;
+}
+
+message ActionResult {
+  int32 case_id = 1;
+  // Human-readable outcome, e.g. "Muted Bob for 1h" plus any warnings
+  // such as channels that couldn't be restricted or an automatic
+  // warn-threshold punishment.
+  string message = 2;
+}
+
+message UpdateReasonRequest {
+  int32 case_id = 1;
+  string reason = 2;
+}
+
+message WarnAction {
+  int32 warn_count = 1;
+  PunishmentType action = 2;
+  double duration_ms = 3;
+}
+
+message WarnActionList {
+  repeated WarnAction actions = 1;
+}
+
+message WarnCountRequest {
+  int32 warn_count = 1;
+}
+
+message ModStats {
+  int32 cases_last_24h = 1;
+  int32 cases_last_7d = 2;
+  int32 active_mutes = 3;
+  int32 active_bans = 4;
+  int32 automod_last_24h = 5;
+}
+
+service ModerationService {
+  rpc GetStats(rootsdk.Void) returns (ModStats);
+  rpc ListCases(ListCasesRequest) returns (CaseList);
+  rpc SearchMembers(MemberSearchRequest) returns (MemberList);
+  rpc GetMember(UserRequest) returns (MemberDetail);
+  rpc ListActiveMutes(rootsdk.Void) returns (MuteList);
+  rpc ListBans(rootsdk.Void) returns (BanList);
+
+  // Same rules as the text commands: staff can only act on members ranked
+  // below them; the owner and bots can't be targeted.
+  rpc Warn(ModActionRequest) returns (ActionResult);
+  rpc Mute(ModActionRequest) returns (ActionResult);
+  rpc Unmute(ModActionRequest) returns (ActionResult);
+  rpc Kick(ModActionRequest) returns (ActionResult);
+  rpc Ban(ModActionRequest) returns (ActionResult);
+  rpc Unban(ModActionRequest) returns (ActionResult);
+
+  rpc VoidWarning(IdRequest) returns (ModCase);
+  rpc UpdateCaseReason(UpdateReasonRequest) returns (ModCase);
+
+  // Admin only.
+  rpc ListWarnActions(rootsdk.Void) returns (WarnActionList);
+  rpc SetWarnAction(WarnAction) returns (WarnActionList);
+  rpc DeleteWarnAction(WarnCountRequest) returns (WarnActionList);
+
+  // Broadcast to moderator+ clients whenever a case is created or changed,
+  // from the GUI, a text command or auto-mod.
+  rpc BroadcastCasesChanged(ChangeEvent) returns (rootsdk.Void);
+}
+
+// ---------------------------------------------------------------------------
+// ContentService: custom commands, reaction panels, announcements, and the
+// member-facing self roles and reminders.
+// Implemented in server/src/services/contentService.ts.
+// ---------------------------------------------------------------------------
+
+message CustomCommand {
+  string name = 1;
+  string response = 2;
+  int32 uses = 3;
+}
+
+message CustomCommandList {
+  repeated CustomCommand commands = 1;
+}
+
+message SaveCustomCommandRequest {
+  string name = 1;
+  string response = 2;
+  // Set when renaming or editing an existing command.
+  optional string original_name = 3;
+}
+
+message NameRequest {
+  string name = 1;
+}
+
+message PanelRole {
+  // As the admin typed it, e.g. ":tada:".
+  string emoji = 1;
+  string role_id = 2;
+  string role_name = 3;
+  string label = 4;
+}
+
+message Panel {
+  int32 id = 1;
+  string channel_id = 2;
+  string channel_name = 3;
+  string title = 4;
+  repeated PanelRole roles = 5;
+}
+
+message PanelList {
+  repeated Panel panels = 1;
+}
+
+message CreatePanelRequest {
+  string channel_id = 1;
+  string title = 2;
+}
+
+message AddPanelRoleRequest {
+  int32 panel_id = 1;
+  // A :shortcode:.
+  string emoji = 2;
+  string role_id = 3;
+  string label = 4;
+}
+
+message RemovePanelRoleRequest {
+  int32 panel_id = 1;
+  string emoji = 2;
+}
+
+message AddPanelRoleResponse {
+  Panel panel = 1;
+  // False when Taproot couldn't add the reaction itself; the GUI should
+  // tell the admin to react with the emoji once.
+  bool reaction_seeded = 2;
+}
+
+enum Repeat {
+  REPEAT_ONCE = 0;
+  REPEAT_DAILY = 1;
+  REPEAT_WEEKLY = 2;
+  REPEAT_MONTHLY = 3;
+}
+
+message Announcement {
+  int32 id = 1;
+  string channel_id = 2;
+  string channel_name = 3;
+  string message = 4;
+  double next_at_ms = 5;
+  Repeat repeat = 6;
+}
+
+message AnnouncementList {
+  repeated Announcement announcements = 1;
+}
+
+message CreateAnnouncementRequest {
+  string channel_id = 1;
+  string message = 2;
+  // When to post first. For repeats, a past time means "next occurrence".
+  double at_ms = 3;
+  Repeat repeat = 4;
+}
+
+message PostMessageRequest {
+  string channel_id = 1;
+  string message = 2;
+}
+
+message SelfRole {
+  string role_id = 1;
+  string name = 2;
+  string color_hex = 3;
+  bool has = 4;
+}
+
+message SelfRoleList {
+  repeated SelfRole roles = 1;
+}
+
+message SetSelfRoleRequest {
+  string role_id = 1;
+  bool has = 2;
+}
+
+message Reminder {
+  int32 id = 1;
+  string channel_id = 2;
+  string channel_name = 3;
+  string message = 4;
+  double due_at_ms = 5;
+}
+
+message ReminderList {
+  repeated Reminder reminders = 1;
+}
+
+service ContentService {
+  // Moderator+.
+  rpc ListCustomCommands(rootsdk.Void) returns (CustomCommandList);
+  rpc SaveCustomCommand(SaveCustomCommandRequest) returns (CustomCommandList);
+  rpc DeleteCustomCommand(NameRequest) returns (CustomCommandList);
+
+  // Admin only.
+  rpc ListPanels(rootsdk.Void) returns (PanelList);
+  rpc CreatePanel(CreatePanelRequest) returns (Panel);
+  rpc AddPanelRole(AddPanelRoleRequest) returns (AddPanelRoleResponse);
+  rpc RemovePanelRole(RemovePanelRoleRequest) returns (Panel);
+  rpc DeletePanel(IdRequest) returns (PanelList);
+
+  // Moderator+.
+  rpc ListAnnouncements(rootsdk.Void) returns (AnnouncementList);
+  rpc CreateAnnouncement(CreateAnnouncementRequest) returns (AnnouncementList);
+  rpc DeleteAnnouncement(IdRequest) returns (AnnouncementList);
+  rpc PostMessage(PostMessageRequest) returns (rootsdk.Void);
+
+  // Anyone: the caller's own roles and reminders.
+  rpc ListSelfRoles(rootsdk.Void) returns (SelfRoleList);
+  rpc SetSelfRole(SetSelfRoleRequest) returns (SelfRoleList);
+  rpc ListMyReminders(rootsdk.Void) returns (ReminderList);
+  rpc CancelReminder(IdRequest) returns (ReminderList);
+
+  // Broadcast to all clients when any of the above content changes.
+  rpc BroadcastContentChanged(ChangeEvent) returns (rootsdk.Void);
+}

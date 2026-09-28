@@ -1,0 +1,32 @@
+.splash {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 100dvh;
+  padding: 24px;
+  text-align: center;
+}
+
+.splashMark {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  font-size: 30px;
+  background: color-mix(in srgb, var(--tp-success) 18%, transparent);
+  margin-bottom: 4px;
+}
+
+.splashTitle {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.splashText {
+  max-width: 360px;
+  font-size: 13px;
+  color: var(--rootsdk-text-secondary);
+}

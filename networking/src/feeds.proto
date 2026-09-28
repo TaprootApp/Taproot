@@ -1,0 +1,152 @@
+syntax = "proto3";
+
+import "rootsdk/types.proto";
+
+// ============================================================================
+// Feeds module: social notifications (YouTube, Reddit, Twitch, Kick) and
+// voice-text channel links. Every RPC is admin-only and throws TaprootError
+// (taproot.proto) on failure. Names are prefixed with "Feeds" because proto
+// files here share one namespace.
+// ============================================================================
+
+enum FeedsKind {
+  FEEDS_KIND_UNSPECIFIED = 0;
+  FEEDS_KIND_YOUTUBE = 1;
+  FEEDS_KIND_REDDIT = 2;
+  FEEDS_KIND_TWITCH = 3;
+  FEEDS_KIND_KICK = 4;
+}
+
+message FeedsFeed {
+  int32 id = 1;
+  FeedsKind kind = 2;
+  // Canonical source: YouTube channel ID, subreddit, Twitch or Kick login.
+  string source = 3;
+  // Display name (channel title, r/name, streamer name).
+  string label = 4;
+  string channel_id = 5;
+  string channel_name = 6;
+  // Role mentioned with each post; empty for none.
+  string role_id = 7;
+  // Empty means the kind's default template.
+  string template = 8;
+  bool enabled = 9;
+  double created_at_ms = 10;
+  // 0 when never checked / never posted.
+  double last_check_at_ms = 11;
+  double last_post_at_ms = 12;
+  double next_check_at_ms = 13;
+  // Empty when the last check worked.
+  string last_error = 14;
+  int32 failures = 15;
+  // Link to the source (channel page, subreddit, stream).
+  string source_url = 16;
+}
+
+message FeedsList {
+  repeated FeedsFeed feeds = 1;
+  // Poll interval in minutes, shown on the page.
+  int32 poll_minutes = 2;
+  // Twitch feeds need credentials; the page warns when they're missing.
+  bool twitch_configured = 3;
+  // Default template per kind, in FeedsKind order (youtube, reddit, twitch, kick).
+  repeated string default_templates = 4;
+}
+
+message FeedsAddRequest {
+  FeedsKind kind = 1;
+  // Channel ID, URL, @handle, subreddit or login, as typed.
+  string source = 2;
+  string channel_id = 3;
+  string role_id = 4;
+  string template = 5;
+}
+
+message FeedsUpdateRequest {
+  int32 id = 1;
+  string channel_id = 2;
+  string role_id = 3;
+  string template = 4;
+  bool enabled = 5;
+}
+
+message FeedsIdRequest {
+  int32 id = 1;
+}
+
+message FeedsTestResponse {
+  // What happened, e.g. "Posted the latest video in #videos."
+  string result = 1;
+}
+
+message FeedsSettings {
+  int32 poll_minutes = 1;
+  string twitch_client_id = 2;
+  // The secret is never sent back; this says whether one is saved.
+  bool twitch_secret_set = 3;
+}
+
+message FeedsSaveSettingsRequest {
+  int32 poll_minutes = 1;
+  string twitch_client_id = 2;
+  // Empty keeps the saved secret.
+  string twitch_client_secret = 3;
+  // Removes the saved client ID and secret.
+  bool clear_twitch = 4;
+}
+
+message FeedsVoiceLink {
+  string voice_channel_id = 1;
+  string voice_channel_name = 2;
+  string text_channel_id = 3;
+  string text_channel_name = 4;
+  // Members currently given access through this link.
+  int32 active_members = 5;
+}
+
+message FeedsVoiceLinkList {
+  repeated FeedsVoiceLink links = 1;
+}
+
+message FeedsVoiceLinkRequest {
+  string voice_channel_id = 1;
+  string text_channel_id = 2;
+}
+
+message FeedsChannel {
+  string id = 1;
+  string name = 2;
+  string group_name = 3;
+  bool voice = 4;
+}
+
+message FeedsChannelList {
+  repeated FeedsChannel channels = 1;
+}
+
+message FeedsChangeEvent {
+  // "feeds:feeds", "feeds:settings" or "feeds:voice".
+  string area = 1;
+}
+
+service FeedsService {
+  // Admin.
+  rpc ListFeeds(rootsdk.Void) returns (FeedsList);
+  rpc AddFeed(FeedsAddRequest) returns (FeedsList);
+  rpc UpdateFeed(FeedsUpdateRequest) returns (FeedsList);
+  rpc RemoveFeed(FeedsIdRequest) returns (FeedsList);
+  // Posts the newest item (or a sample when there is none) to the feed's channel.
+  rpc TestFeed(FeedsIdRequest) returns (FeedsTestResponse);
+  rpc GetSettings(rootsdk.Void) returns (FeedsSettings);
+  rpc SaveSettings(FeedsSaveSettingsRequest) returns (FeedsSettings);
+
+  // Admin: voice-text links.
+  rpc ListVoiceLinks(rootsdk.Void) returns (FeedsVoiceLinkList);
+  rpc AddVoiceLink(FeedsVoiceLinkRequest) returns (FeedsVoiceLinkList);
+  rpc RemoveVoiceLink(FeedsVoiceLinkRequest) returns (FeedsVoiceLinkList);
+  // Text and voice channels, for the link pickers.
+  rpc ListChannels(rootsdk.Void) returns (FeedsChannelList);
+
+  // To all clients after any feeds change; clients refetch.
+  rpc BroadcastFeedsChanged(FeedsChangeEvent) returns (rootsdk.Void);
+}

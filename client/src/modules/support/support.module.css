@@ -1,0 +1,152 @@
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--rootsdk-border);
+  min-width: 0;
+}
+
+.row:first-child {
+  border-top: none;
+}
+
+.main {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.title {
+  color: var(--rootsdk-text-primary);
+  font-size: 14px;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  color: var(--rootsdk-text-tertiary);
+  font-size: 12px;
+  line-height: 16px;
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
+
+.hint {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--rootsdk-text-secondary);
+}
+
+.hint code,
+.mono {
+  font-family: var(--tp-font-mono);
+  font-size: 12px;
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--rootsdk-border);
+}
+
+.toolbar > * {
+  min-width: 160px;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  padding: 12px 16px;
+  border-top: 1px solid var(--rootsdk-border);
+}
+
+.transcript {
+  margin: 0;
+  max-height: 60vh;
+  overflow: auto;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--rootsdk-background-tertiary);
+  color: var(--rootsdk-text-primary);
+  font-family: var(--tp-font-mono);
+  font-size: 12px;
+  line-height: 18px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.answers {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.question {
+  font-size: 13px;
+  line-height: 18px;
+  font-weight: 500;
+  color: var(--rootsdk-text-secondary);
+}
+
+.answer {
+  margin-top: 2px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--rootsdk-text-primary);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.questionCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--rootsdk-border);
+  border-radius: 8px;
+}
+
+.questionHead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.questionHead > :first-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: var(--rootsdk-text-primary);
+  cursor: pointer;
+}
+
+.required {
+  color: var(--rootsdk-text-tertiary);
+  font-weight: 400;
+}

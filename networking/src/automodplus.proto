@@ -1,0 +1,204 @@
+syntax = "proto3";
+
+import "rootsdk/types.proto";
+
+// ============================================================================
+// automodplus module: extra auto-mod filters and per-rule actions, channel
+// rules (auto delete, auto purge, slowmode) and join protection (autoban,
+// raid mode). Implemented in server/src/modules/automodplus/service.ts.
+// Admin only, except SetRaidMode (moderators). Times are epoch ms doubles.
+// ============================================================================
+
+enum AutomodplusAction {
+  AUTOMODPLUS_ACTION_UNSPECIFIED = 0;
+  AUTOMODPLUS_ACTION_DELETE = 1;
+  AUTOMODPLUS_ACTION_WARN = 2;
+  AUTOMODPLUS_ACTION_MUTE = 3;
+  AUTOMODPLUS_ACTION_KICK = 4;
+  AUTOMODPLUS_ACTION_BAN = 5;
+}
+
+// What happens when one rule removes a message.
+message AutomodplusRuleSettings {
+  // words, links, mentions, spam, caps, invites, scam, zalgo, emoji,
+  // newlines, repeated, attachments, newMemberLinks.
+  string rule = 1;
+  AutomodplusAction action = 2;
+  int32 mute_minutes = 3;
+  // Replaces the default notice; empty = default.
+  string response = 4;
+  optional string log_channel_id = 5;
+  repeated string exempt_channel_ids = 6;
+  repeated string exempt_role_ids = 7;
+}
+
+message AutomodplusFilters {
+  bool invites_enabled = 1;
+  repeated string allowed_invite_codes = 2;
+  bool scam_enabled = 3;
+  repeated string scam_domains = 4;
+  bool zalgo_enabled = 5;
+  bool emoji_enabled = 6;
+  int32 emoji_max = 7;
+  bool wall_enabled = 8;
+  int32 wall_max_lines = 9;
+  int32 wall_max_chars = 10;
+  bool repeated_enabled = 11;
+  int32 repeated_max = 12;
+  bool attachments_enabled = 13;
+  int32 attachments_max = 14;
+  bool new_member_links_enabled = 15;
+  int32 new_member_minutes = 16;
+}
+
+message AutomodplusAutomodConfig {
+  AutomodplusFilters filters = 1;
+  // One entry per rule; saving replaces them all.
+  repeated AutomodplusRuleSettings rules = 2;
+}
+
+enum AutomodplusAllowType {
+  AUTOMODPLUS_ALLOW_TYPE_UNSPECIFIED = 0;
+  AUTOMODPLUS_ALLOW_TYPE_ANY = 1;
+  AUTOMODPLUS_ALLOW_TYPE_IMAGES = 2;
+  AUTOMODPLUS_ALLOW_TYPE_ATTACHMENTS = 3;
+  AUTOMODPLUS_ALLOW_TYPE_LINKS = 4;
+  AUTOMODPLUS_ALLOW_TYPE_TEXT = 5;
+  AUTOMODPLUS_ALLOW_TYPE_COMMANDS = 6;
+}
+
+message AutomodplusAutoDeleteRule {
+  string channel_id = 1;
+  AutomodplusAllowType allow = 2;
+  // 0 = off.
+  int32 delete_after_minutes = 3;
+  bool exempt_staff = 4;
+}
+
+message AutomodplusSlowmodeRule {
+  string channel_id = 1;
+  int32 seconds = 2;
+}
+
+enum AutomodplusPurgeMode {
+  AUTOMODPLUS_PURGE_MODE_UNSPECIFIED = 0;
+  AUTOMODPLUS_PURGE_MODE_INTERVAL = 1;
+  AUTOMODPLUS_PURGE_MODE_DAILY = 2;
+}
+
+message AutomodplusPurge {
+  int32 id = 1;
+  string channel_id = 2;
+  AutomodplusPurgeMode mode = 3;
+  int32 every_hours = 4;
+  // Minutes after midnight UTC.
+  int32 daily_minute_utc = 5;
+  bool keep_pinned = 6;
+  double next_run_at_ms = 7;
+  // 0 = never ran.
+  double last_run_at_ms = 8;
+  int32 last_deleted = 9;
+}
+
+message AutomodplusChannelRules {
+  repeated AutomodplusAutoDeleteRule auto_delete = 1;
+  repeated AutomodplusSlowmodeRule slowmode = 2;
+  repeated AutomodplusPurge purges = 3;
+}
+
+message AutomodplusChannelRulesUpdate {
+  repeated AutomodplusAutoDeleteRule auto_delete = 1;
+  repeated AutomodplusSlowmodeRule slowmode = 2;
+}
+
+message AutomodplusPurgeSave {
+  // 0 = new.
+  int32 id = 1;
+  string channel_id = 2;
+  AutomodplusPurgeMode mode = 3;
+  int32 every_hours = 4;
+  int32 daily_minute_utc = 5;
+  bool keep_pinned = 6;
+}
+
+message AutomodplusPurgeId {
+  int32 id = 1;
+}
+
+enum AutomodplusJoinAction {
+  AUTOMODPLUS_JOIN_ACTION_UNSPECIFIED = 0;
+  AUTOMODPLUS_JOIN_ACTION_KICK = 1;
+  AUTOMODPLUS_JOIN_ACTION_BAN = 2;
+}
+
+message AutomodplusAutoban {
+  bool enabled = 1;
+  repeated string name_patterns = 2;
+  // 0 = off.
+  int32 min_account_days = 3;
+  AutomodplusJoinAction action = 4;
+  string reason = 5;
+}
+
+message AutomodplusRaid {
+  bool enabled = 1;
+  int32 joins = 2;
+  int32 seconds = 3;
+  repeated string lock_channel_ids = 4;
+  bool throttle_enabled = 5;
+  int32 throttle_count = 6;
+  int32 throttle_window_minutes = 7;
+  // 0 = only ended by hand.
+  int32 auto_end_minutes = 8;
+}
+
+message AutomodplusRaidStatus {
+  bool active = 1;
+  double started_at_ms = 2;
+  // 0 = no automatic end.
+  double ends_at_ms = 3;
+  int32 locked_count = 4;
+  bool throttled = 5;
+  string reason = 6;
+}
+
+message AutomodplusJoinProtection {
+  AutomodplusAutoban autoban = 1;
+  AutomodplusRaid raid = 2;
+  AutomodplusRaidStatus status = 3;
+}
+
+message AutomodplusJoinProtectionUpdate {
+  AutomodplusAutoban autoban = 1;
+  AutomodplusRaid raid = 2;
+}
+
+message AutomodplusRaidModeRequest {
+  bool active = 1;
+  string reason = 2;
+}
+
+message AutomodplusChangeEvent {
+  // "automodplus:automod", "automodplus:channels" or "automodplus:join".
+  string area = 1;
+}
+
+service AutomodplusService {
+  rpc GetAutomodExtras(rootsdk.Void) returns (AutomodplusAutomodConfig);
+  rpc UpdateAutomodExtras(AutomodplusAutomodConfig) returns (AutomodplusAutomodConfig);
+
+  rpc GetChannelRules(rootsdk.Void) returns (AutomodplusChannelRules);
+  // Replaces the auto delete and slowmode lists.
+  rpc UpdateChannelRules(AutomodplusChannelRulesUpdate) returns (AutomodplusChannelRules);
+  rpc SavePurge(AutomodplusPurgeSave) returns (AutomodplusChannelRules);
+  rpc DeletePurge(AutomodplusPurgeId) returns (AutomodplusChannelRules);
+  // Starts one purge now; it runs in the background (Root deletes ~5 messages/s).
+  rpc RunPurge(AutomodplusPurgeId) returns (AutomodplusChannelRules);
+
+  rpc GetJoinProtection(rootsdk.Void) returns (AutomodplusJoinProtection);
+  rpc UpdateJoinProtection(AutomodplusJoinProtectionUpdate) returns (AutomodplusJoinProtection);
+  // Moderators: start or end raid mode by hand.
+  rpc SetRaidMode(AutomodplusRaidModeRequest) returns (AutomodplusJoinProtection);
+
+  rpc BroadcastAutomodplusChanged(AutomodplusChangeEvent) returns (rootsdk.Void);
+}

@@ -1,0 +1,97 @@
+syntax = "proto3";
+
+import "rootsdk/types.proto";
+
+// ============================================================================
+// Utility module: AFK status and highlight keywords (each member's own) and
+// autoresponders (moderator+). Implemented in
+// server/src/modules/utility/service.ts. Same conventions as taproot.proto;
+// every name carries the Utility prefix because proto files share one scope.
+// ============================================================================
+
+message UtilityAfkStatus {
+  bool afk = 1;
+  string message = 2;
+  // When the AFK was set; 0 when not AFK.
+  double since_at_ms = 3;
+}
+
+message UtilitySetAfkRequest {
+  // Empty means the default "AFK".
+  string message = 1;
+}
+
+message UtilityHighlightList {
+  repeated string keywords = 1;
+  // Most keywords a member may have.
+  int32 max = 2;
+}
+
+message UtilityKeywordRequest {
+  string keyword = 1;
+}
+
+enum UtilityMatchMode {
+  UTILITY_MATCH_MODE_UNSPECIFIED = 0;
+  // The whole message equals the trigger.
+  UTILITY_MATCH_MODE_EXACT = 1;
+  // The trigger appears anywhere (as whole words).
+  UTILITY_MATCH_MODE_CONTAINS = 2;
+  // The message starts with the trigger.
+  UTILITY_MATCH_MODE_STARTS_WITH = 3;
+  // The trigger is a pattern where * matches any text; it must match the whole message.
+  UTILITY_MATCH_MODE_WILDCARD = 4;
+}
+
+message UtilityAutoresponder {
+  // 0 when creating.
+  int32 id = 1;
+  string trigger = 2;
+  UtilityMatchMode match = 3;
+  // Text reply; empty when the autoresponder only reacts.
+  string response = 4;
+  // Reaction as a :shortcode:; empty for none.
+  string reaction = 5;
+  // Channels it works in; empty means every channel.
+  repeated string channel_ids = 6;
+  int32 cooldown_seconds = 7;
+  int32 uses = 8;
+  // Display only; filled by the server.
+  repeated string channel_names = 9;
+}
+
+message UtilityAutoresponderList {
+  repeated UtilityAutoresponder autoresponders = 1;
+  int32 max = 2;
+}
+
+message UtilityIdRequest {
+  int32 id = 1;
+}
+
+message UtilityChangeEvent {
+  // "utility:autoresponders", "utility:afk" or "utility:highlights".
+  string area = 1;
+}
+
+service UtilityService {
+  // Anyone: the caller's own AFK status.
+  rpc GetMyAfk(rootsdk.Void) returns (UtilityAfkStatus);
+  rpc SetMyAfk(UtilitySetAfkRequest) returns (UtilityAfkStatus);
+  rpc ClearMyAfk(rootsdk.Void) returns (UtilityAfkStatus);
+
+  // Anyone: the caller's own highlight keywords.
+  rpc ListMyHighlights(rootsdk.Void) returns (UtilityHighlightList);
+  rpc AddMyHighlight(UtilityKeywordRequest) returns (UtilityHighlightList);
+  rpc RemoveMyHighlight(UtilityKeywordRequest) returns (UtilityHighlightList);
+  rpc ClearMyHighlights(rootsdk.Void) returns (UtilityHighlightList);
+
+  // Moderator+.
+  rpc ListAutoresponders(rootsdk.Void) returns (UtilityAutoresponderList);
+  rpc SaveAutoresponder(UtilityAutoresponder) returns (UtilityAutoresponderList);
+  rpc DeleteAutoresponder(UtilityIdRequest) returns (UtilityAutoresponderList);
+
+  // Autoresponder changes go to moderator+ clients; AFK and highlight changes
+  // only to that member's own clients.
+  rpc BroadcastUtilityChanged(UtilityChangeEvent) returns (rootsdk.Void);
+}

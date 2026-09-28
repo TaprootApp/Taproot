@@ -1,0 +1,13 @@
+{
+  // Dev-only tools (the demo seed). Compiled to server/devtools-dist, which is
+  // git-ignored and never packaged: the manifest deploys only server/dist.
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "composite": false,
+    "declaration": false,
+    "incremental": false,
+    "rootDir": "..",
+    "outDir": "../devtools-dist"
+  },
+  "include": ["./*.ts"]
+}

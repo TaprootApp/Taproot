@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+import "rootsdk/types.proto";
+
+// ============================================================================
+// Logs module: the action log (server events posted to staff channels) and
+// public ban/kick announcements. Implemented in server/src/modules/logs.
+// Every message is prefixed "Logs" because proto files here share one
+// namespace. Admin only.
+// ============================================================================
+
+// One loggable event type. key/label/group come from the server so the GUI
+// never falls out of step with what the server can log.
+message LogsEventSetting {
+  // e.g. "messageDelete", "memberJoin", "voiceJoin".
+  string key = 1;
+  string label = 2;
+  // "Messages", "Members", "Roles", "Channels" or "Voice".
+  string group = 3;
+  bool enabled = 4;
+  // Posts this event somewhere other than the default log channel.
+  optional string channel_id = 5;
+}
+
+message LogsAnnouncements {
+  // Public channel for ban/kick announcements; unset means off.
+  optional string channel_id = 1;
+  bool bans = 2;
+  bool kicks = 3;
+  // Placeholders: {user.name} {user.id} {reason} {server}.
+  string ban_template = 4;
+  string kick_template = 5;
+}
+
+message LogsConfig {
+  // Default log channel; unset means the action log is off.
+  optional string channel_id = 1;
+  repeated LogsEventSetting events = 2;
+  // Message and voice events in these channels aren't logged.
+  repeated string ignored_channel_ids = 3;
+  LogsAnnouncements announcements = 4;
+}
+
+message LogsChangeEvent {
+  string area = 1;
+}
+
+service LogsService {
+  rpc GetLogsConfig(rootsdk.Void) returns (LogsConfig);
+  // Replaces the whole config (events are matched by key) and returns it.
+  rpc UpdateLogsConfig(LogsConfig) returns (LogsConfig);
+
+  // Broadcast to all clients after any change (GUI or the logs command).
+  rpc BroadcastLogsChanged(LogsChangeEvent) returns (rootsdk.Void);
+}

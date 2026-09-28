@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy Policy · Taproot</title>
+  <meta name="description" content="How Taproot, the moderation app for Root communities, handles your information.">
+  <link rel="icon" href="../icon-512.png">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <header class="site">
+    <div class="wrap">
+      <img src="../icon-512.png" alt="">
+      <a class="brand" href="../">Taproot</a>
+      <nav><a href="../privacy/">Privacy</a></nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <article class="doc">
+      <h1>Taproot Privacy Policy</h1>
+      <p class="meta">Effective September 28, 2026 · Published by supatuck</p>
+
+      <p>Taproot is a moderation and community app for <a href="https://www.rootapp.com">Root</a>. Community administrators install it into their Root community, where it runs on Root's platform. This policy explains what information Taproot handles, why, and what control you have over it. It covers Taproot only. Your use of Root itself is covered by Root's own privacy policy.</p>
+
+      <div class="note"><strong>In short:</strong> Taproot uses community information only to provide its features in that community. It doesn't sell data, show ads or build profiles. It contacts outside services only when an admin sets up a social feed, and then sends only the feed's channel or subreddit name. Member information is never sent.</div>
+
+      <h2>Information Taproot handles</h2>
+      <ul>
+        <li><strong>Messages.</strong> Taproot reads messages in channels it has access to, so it can respond to commands and run its features. Message text isn't saved, except in the cases described in the next item. In memory only, Taproot briefly keeps:
+          <ul>
+            <li>a short record of each member's recent messages, to spot spam (about a minute);</li>
+            <li>recent message text for the action log, but only while delete or edit logging is on (at most 5,000 messages or 24 hours).</li>
+          </ul>
+          Both are cleared when Taproot restarts.</li>
+        <li><strong>Message text posted or kept on purpose.</strong> Some features copy message text by design:
+          <ul>
+            <li>the <em>action log</em> posts deleted and edited messages to a staff channel the admins choose;</li>
+            <li>the <em>starboard</em> reposts highly starred messages to the starboard channel;</li>
+            <li><em>ticket transcripts</em> keep the text of a support ticket's messages after it's closed;</li>
+            <li>an optional auto-mod log channel gets up to 300 characters of a removed message.</li>
+          </ul>
+        </li>
+        <li><strong>Text you give Taproot.</strong> This includes:
+          <ul>
+            <li>reminders;</li>
+            <li>your AFK note and your highlight keywords;</li>
+            <li>form answers you submit;</li>
+            <li>staff-made content: custom commands, autoresponders, announcements, welcome and level-up messages, giveaway prizes, polls, reaction-role panels, shop items, notes on members, and the reasons for moderation actions.</li>
+          </ul>
+        </li>
+        <li><strong>Member details.</strong> Root user IDs, role IDs, and each member's last known community nickname, so logs and messages can show names.</li>
+        <li><strong>Moderation records.</strong>
+          <ul>
+            <li>Cases and warnings.</li>
+            <li>Mutes, voice mutes, temporary roles, channel locks and scheduled role grants.</li>
+            <li>Staff notes about members.</li>
+            <li>Raid-protection state.</li>
+          </ul>
+        </li>
+        <li><strong>Activity features.</strong> Each of these is used only if the community turns it on:
+          <ul>
+            <li>XP and level;</li>
+            <li>currency balance, daily streak and cooldowns;</li>
+            <li>giveaway entries;</li>
+            <li>poll votes;</li>
+            <li>starboard records;</li>
+            <li>support tickets (who opened, claimed and closed them);</li>
+            <li>form submissions and their review status.</li>
+          </ul>
+        </li>
+        <li><strong>Auto-mod records.</strong> Taproot records which rule was broken and when, not the message text. These records are deleted after 24 hours. Messages that auto-mod sets to delete later are queued for at most 7 days.</li>
+        <li><strong>Community settings.</strong> Every feature's configuration. For Twitch feeds, this includes the Twitch app credentials an admin enters. The secret is never shown again or logged.</li>
+      </ul>
+
+      <h2>How it's used</h2>
+      <p>Only to provide Taproot's features in the community where it's installed. Taproot doesn't use your information for advertising, doesn't sell or rent it, and doesn't share it with third parties, apart from the feed requests below.</p>
+
+      <h2>Outside services</h2>
+      <p>Taproot contacts outside services only for social feeds an admin adds. Each request identifies itself as Taproot.</p>
+      <ul>
+        <li><strong>YouTube</strong> (www.youtube.com): new uploads for a channel ID or handle.</li>
+        <li><strong>Reddit</strong> (www.reddit.com): new posts for a subreddit name.</li>
+        <li><strong>Twitch</strong> (id.twitch.tv and api.twitch.tv): live status for a channel name, using the credentials the admin entered.</li>
+        <li><strong>Kick</strong> (kick.com): live status for a channel name.</li>
+      </ul>
+      <p>Those services receive the channel or subreddit name and our server's network address, and handle requests under their own privacy policies. No member information is sent. Everything else goes through Root, including push notifications.</p>
+
+      <h2>Notifications</h2>
+      <p>Taproot can send you push notifications through Root, which may appear on your lock screen. It sends them when:</p>
+      <ul>
+        <li>a highlight keyword you chose is mentioned (with a short excerpt of the message);</li>
+        <li>you win a giveaway;</li>
+        <li>your support ticket is closed or your form submission is reviewed;</li>
+        <li>you receive a moderation action, if the community has turned that on. These notices are generic and never include the reason.</li>
+      </ul>
+
+      <h2>Where it's stored</h2>
+      <p>Each Taproot installation stores its data in the database Root provides for that community, on Root's infrastructure. Root also keeps backups of it. Data from one community isn't available to Taproot in any other community.</p>
+
+      <h2>Who can see it</h2>
+      <ul>
+        <li><strong>Community staff.</strong> Moderators and admins chosen by the community can see the following, through Taproot's channel, its commands, and the staff channels admins pick:
+          <ul>
+            <li>moderation records and notes;</li>
+            <li>tickets and transcripts;</li>
+            <li>form submissions;</li>
+            <li>settings.</li>
+          </ul>
+        </li>
+        <li><strong>Other members.</strong> Anyone in the community can see leaderboards (levels and currency), giveaway results, poll results and starboard posts.</li>
+        <li><strong>You.</strong> You can see and manage your own reminders, AFK note, highlight keywords, self-assignable roles, rank, balance and form submissions.</li>
+        <li><strong>The developer (supatuck).</strong> If a community has turned on developer logging in Root, Taproot's diagnostic logs are visible to us. Those logs can include user or channel IDs when something fails. We use them only to find and fix problems.</li>
+      </ul>
+
+      <h2>How long it's kept</h2>
+      <ul>
+        <li><strong>Deleted automatically:</strong>
+          <ul>
+            <li>reminders, once sent;</li>
+            <li>one-time announcements, once posted;</li>
+            <li>AFK notes, when you next post;</li>
+            <li>auto-mod records, after 24 hours;</li>
+            <li>ticket transcripts, after 90 days by default (admins can change this).</li>
+          </ul>
+        </li>
+        <li><strong>Deleted when you or staff remove it:</strong>
+          <ul>
+            <li>highlight keywords;</li>
+            <li>custom commands and autoresponders;</li>
+            <li>reaction-role panels;</li>
+            <li>notes on members;</li>
+            <li>feeds;</li>
+            <li>forms and form submissions.</li>
+          </ul>
+        </li>
+        <li><strong>Kept while Taproot is installed:</strong>
+          <ul>
+            <li>moderation cases, the community's moderation history (staff can void warnings);</li>
+            <li>XP and balances, until an admin resets them;</li>
+            <li>giveaway and poll records.</li>
+          </ul>
+        </li>
+      </ul>
+
+      <h2>Your choices</h2>
+      <p>For anything about a specific community, such as a warning, a mute or a leaderboard, contact that community's staff first. To ask about the data Taproot holds about you, or to request that it be deleted, email <a href="mailto:support@conduitplugins.com">support@conduitplugins.com</a>. Include the community name and your Root user ID so we can find it. Some records, like moderation cases, belong to the community's moderation history, so we may need to involve the community's administrators.</p>
+
+      <h2>Children</h2>
+      <p>Taproot is part of Root communities and relies on Root's own age requirements. Taproot doesn't ask anyone for personal information beyond what's described here.</p>
+
+      <h2>Changes to this policy</h2>
+      <p>If this policy changes, we'll update it on this page and change the effective date above. If we make significant changes, we'll mention them in Taproot's listing notes.</p>
+
+      <h2>Contact</h2>
+      <p>supatuck · <a href="mailto:support@conduitplugins.com">support@conduitplugins.com</a></p>
+    </article>
+  </main>
+
+  <footer class="site">
+    <div class="wrap">
+      <span>© 2026 supatuck</span>
+      <a href="../">Taproot</a>
+      <a href="mailto:support@conduitplugins.com">support@conduitplugins.com</a>
+    </div>
+  </footer>
+</body>
+</html>

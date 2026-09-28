@@ -1,0 +1,35 @@
+.ring {
+  display: inline-block;
+  flex-shrink: 0;
+  border-style: solid;
+  border-color: var(--rootsdk-highlight-strong);
+  border-top-color: var(--rootsdk-text-secondary);
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+}
+
+.wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 48px 16px;
+  width: 100%;
+}
+
+.label {
+  color: var(--rootsdk-text-secondary);
+  font-size: 13px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

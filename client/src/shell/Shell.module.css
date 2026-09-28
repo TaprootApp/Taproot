@@ -1,0 +1,238 @@
+/* Wide: sidebar | content. Below 760px: top bar + drop-down menu. */
+
+.shell {
+  display: flex;
+  min-height: 100dvh;
+}
+
+.column {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  padding: 24px 28px 48px;
+}
+
+.contentInner {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+/* Sidebar */
+.sidebar {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: var(--tp-sidebar-width);
+  height: 100dvh;
+  background: var(--rootsdk-background-secondary);
+  border-right: 1px solid var(--rootsdk-border);
+  overflow-y: auto;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 16px 12px;
+}
+
+.brandMark {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  font-size: 18px;
+  background: color-mix(in srgb, var(--tp-success) 18%, transparent);
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.brandName {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--rootsdk-text-primary);
+}
+
+.brandCommunity {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--rootsdk-text-tertiary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 4px 8px 12px;
+}
+
+.navGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.navGroupLabel {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--rootsdk-text-tertiary);
+}
+
+.navItem {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 34px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: var(--tp-radius-md);
+  background: transparent;
+  color: var(--rootsdk-text-secondary);
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: background-color 150ms, color 150ms;
+}
+
+.navItem:hover {
+  background: var(--rootsdk-highlight-light);
+  color: var(--rootsdk-text-primary);
+}
+
+.navItemActive,
+.navItemActive:hover {
+  background: var(--rootsdk-highlight-normal);
+  color: var(--rootsdk-text-primary);
+  font-weight: 500;
+}
+
+.identity {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 12px 10px 16px;
+  border-top: 1px solid var(--rootsdk-border);
+}
+
+.identityText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  min-width: 0;
+}
+
+.identityName {
+  max-width: 100%;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--rootsdk-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Top bar (narrow) */
+.topBar {
+  display: none;
+}
+
+@media (max-width: 759px) {
+  .sidebar {
+    display: none;
+  }
+
+  .content {
+    padding: 16px 16px 40px;
+  }
+
+  .topBar {
+    display: block;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--rootsdk-background-secondary);
+    border-bottom: 1px solid var(--rootsdk-border);
+  }
+}
+
+.topBarRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px 6px 12px;
+}
+
+.topBarBrand {
+  font-size: 18px;
+}
+
+.topBarMenu {
+  appearance: none;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-width: 0;
+  min-height: 40px;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: var(--tp-radius-md);
+  background: transparent;
+  color: var(--rootsdk-text-primary);
+  cursor: pointer;
+}
+
+.topBarMenu:hover {
+  background: var(--rootsdk-highlight-light);
+}
+
+.topBarTitle {
+  font-size: 15px;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topBarSep {
+  color: var(--rootsdk-text-tertiary);
+  margin: 0 2px;
+}
+
+.menu {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  max-height: calc(100dvh - 60px);
+  overflow-y: auto;
+  padding-top: 8px;
+  background: var(--rootsdk-background-secondary);
+  border-bottom: 1px solid var(--rootsdk-border);
+  box-shadow: var(--tp-shadow-lg);
+}

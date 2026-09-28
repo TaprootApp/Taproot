@@ -1,0 +1,282 @@
+syntax = "proto3";
+
+import "rootsdk/types.proto";
+
+// ============================================================================
+// Support module: tickets and forms. Implemented in
+// server/src/modules/support/service.ts.
+//
+// There is no proto package, so every name is prefixed with "Support".
+// Same conventions as taproot.proto: times are epoch milliseconds in
+// *_at_ms doubles; every RPC checks the caller's level on the server
+// (noted per RPC) and fails with TaprootError.
+// ============================================================================
+
+// ---------------------------------------------------------------------------
+// Tickets
+// ---------------------------------------------------------------------------
+
+enum SupportTicketStatus {
+  SUPPORT_TICKET_STATUS_UNSPECIFIED = 0;
+  SUPPORT_TICKET_STATUS_OPEN = 1;
+  SUPPORT_TICKET_STATUS_CLOSED = 2;
+}
+
+enum SupportTranscriptMode {
+  SUPPORT_TRANSCRIPT_MODE_UNSPECIFIED = 0;
+  // The whole transcript is posted (in several messages if needed).
+  SUPPORT_TRANSCRIPT_MODE_FULL = 1;
+  // A one-message summary; the transcript stays in the Tickets page.
+  SUPPORT_TRANSCRIPT_MODE_SUMMARY = 2;
+  // Nothing is posted; the transcript stays in the Tickets page.
+  SUPPORT_TRANSCRIPT_MODE_OFF = 3;
+}
+
+message SupportTicket {
+  int32 id = 1;
+  string channel_id = 2;
+  string channel_name = 3;
+  string opener_id = 4;
+  string opener_name = 5;
+  string topic = 6;
+  SupportTicketStatus status = 7;
+  string claimed_by_id = 8;
+  string claimed_by_name = 9;
+  double opened_at_ms = 10;
+  double closed_at_ms = 11;
+  string closed_by_name = 12;
+  string close_reason = 13;
+  bool has_transcript = 14;
+  int32 message_count = 15;
+}
+
+message SupportTicketList {
+  repeated SupportTicket tickets = 1;
+  int32 total = 2;
+  // Whether members can open tickets right now (ListMyTickets only).
+  bool tickets_enabled = 3;
+}
+
+message SupportListTicketsRequest {
+  // UNSPECIFIED lists both.
+  SupportTicketStatus status = 1;
+  int32 offset = 2;
+  int32 limit = 3;
+}
+
+message SupportTicketIdRequest {
+  int32 id = 1;
+}
+
+message SupportTranscript {
+  int32 ticket_id = 1;
+  string text = 2;
+}
+
+message SupportCloseTicketRequest {
+  int32 id = 1;
+  string reason = 2;
+}
+
+message SupportOpenTicketRequest {
+  string topic = 1;
+}
+
+message SupportTicketConfig {
+  bool enabled = 1;
+  // Where ticket channels are created.
+  string channel_group_id = 2;
+  // Roles that can see and work every ticket (besides Taproot and the opener).
+  repeated string staff_role_ids = 3;
+  // Open tickets allowed per member (1-10).
+  int32 max_open = 4;
+  optional string transcript_channel_id = 5;
+  SupportTranscriptMode transcript_mode = 6;
+  // Posted in each new ticket. Placeholders: {user} {user.name} {topic} {ticket}.
+  string welcome_message = 7;
+  // Mention the staff roles in the welcome message.
+  bool ping_staff = 8;
+  // Days closed-ticket transcripts are kept (0 = forever).
+  int32 transcript_retention_days = 9;
+  // The "react to open a ticket" panel; read-only here, see PostTicketPanel.
+  string panel_channel_id = 10;
+  string panel_emoji = 11;
+}
+
+message SupportChannelGroup {
+  string id = 1;
+  string name = 2;
+}
+
+message SupportTicketSettings {
+  SupportTicketConfig config = 1;
+  repeated SupportChannelGroup channel_groups = 2;
+  string panel_channel_name = 3;
+}
+
+message SupportPostPanelRequest {
+  string channel_id = 1;
+  string title = 2;
+  string description = 3;
+  // A :shortcode:, e.g. :ticket: or :envelope_with_arrow:.
+  string emoji = 4;
+}
+
+// ---------------------------------------------------------------------------
+// Forms
+// ---------------------------------------------------------------------------
+
+enum SupportQuestionType {
+  SUPPORT_QUESTION_TYPE_UNSPECIFIED = 0;
+  SUPPORT_QUESTION_TYPE_SHORT = 1;
+  SUPPORT_QUESTION_TYPE_LONG = 2;
+  SUPPORT_QUESTION_TYPE_CHOICE = 3;
+}
+
+enum SupportSubmissionStatus {
+  SUPPORT_SUBMISSION_STATUS_UNSPECIFIED = 0;
+  SUPPORT_SUBMISSION_STATUS_PENDING = 1;
+  SUPPORT_SUBMISSION_STATUS_ACCEPTED = 2;
+  SUPPORT_SUBMISSION_STATUS_DENIED = 3;
+  SUPPORT_SUBMISSION_STATUS_CLOSED = 4;
+}
+
+message SupportQuestion {
+  // Stable within a form; the server assigns one to new questions.
+  string id = 1;
+  string label = 2;
+  SupportQuestionType type = 3;
+  bool required = 4;
+  // Choice questions only.
+  repeated string choices = 5;
+}
+
+message SupportForm {
+  // 0 when creating.
+  int32 id = 1;
+  string title = 2;
+  string description = 3;
+  repeated SupportQuestion questions = 4;
+  optional string channel_id = 5;
+  string channel_name = 6;
+  // Empty = everyone may submit.
+  string role_id = 7;
+  bool one_per_member = 8;
+  bool enabled = 9;
+  int32 submission_count = 10;
+  int32 pending_count = 11;
+}
+
+message SupportFormList {
+  repeated SupportForm forms = 1;
+}
+
+// A form as a member sees it.
+message SupportAvailableForm {
+  int32 id = 1;
+  string title = 2;
+  string description = 3;
+  repeated SupportQuestion questions = 4;
+  // Empty when the member can submit; otherwise why not.
+  string blocked_reason = 5;
+}
+
+message SupportAvailableFormList {
+  repeated SupportAvailableForm forms = 1;
+}
+
+message SupportAnswer {
+  string question_id = 1;
+  string value = 2;
+}
+
+message SupportSubmitRequest {
+  int32 form_id = 1;
+  repeated SupportAnswer answers = 2;
+}
+
+message SupportAnsweredQuestion {
+  string label = 1;
+  string value = 2;
+}
+
+message SupportSubmission {
+  int32 id = 1;
+  int32 form_id = 2;
+  string form_title = 3;
+  string user_id = 4;
+  string user_name = 5;
+  repeated SupportAnsweredQuestion answers = 6;
+  SupportSubmissionStatus status = 7;
+  string note = 8;
+  string reviewer_name = 9;
+  double created_at_ms = 10;
+  double updated_at_ms = 11;
+}
+
+message SupportSubmissionList {
+  repeated SupportSubmission submissions = 1;
+  int32 total = 2;
+}
+
+message SupportListSubmissionsRequest {
+  // 0 = every form.
+  int32 form_id = 1;
+  // UNSPECIFIED = every status.
+  SupportSubmissionStatus status = 2;
+  int32 offset = 3;
+  int32 limit = 4;
+}
+
+message SupportReviewRequest {
+  int32 id = 1;
+  SupportSubmissionStatus status = 2;
+  string note = 3;
+}
+
+message SupportIdRequest {
+  int32 id = 1;
+}
+
+// Payload of BroadcastSupportChanged: "support:tickets", "support:forms",
+// "support:submissions" or "support:config". Clients refetch.
+message SupportChangeEvent {
+  string area = 1;
+}
+
+service SupportService {
+  // Tickets: staff (moderator+).
+  rpc ListTickets(SupportListTicketsRequest) returns (SupportTicketList);
+  rpc GetTranscript(SupportTicketIdRequest) returns (SupportTranscript);
+  rpc CloseTicket(SupportCloseTicketRequest) returns (SupportTicket);
+  // Deletes a closed ticket's record and transcript (admin).
+  rpc DeleteTicket(SupportTicketIdRequest) returns (SupportTicketList);
+
+  // Tickets: members (their own only).
+  rpc OpenTicket(SupportOpenTicketRequest) returns (SupportTicket);
+  rpc ListMyTickets(rootsdk.Void) returns (SupportTicketList);
+
+  // Ticket settings (admin).
+  rpc GetTicketSettings(rootsdk.Void) returns (SupportTicketSettings);
+  rpc SaveTicketConfig(SupportTicketConfig) returns (SupportTicketSettings);
+  rpc PostTicketPanel(SupportPostPanelRequest) returns (SupportTicketSettings);
+  rpc RemoveTicketPanel(rootsdk.Void) returns (SupportTicketSettings);
+
+  // Form builder (admin).
+  rpc ListForms(rootsdk.Void) returns (SupportFormList);
+  rpc SaveForm(SupportForm) returns (SupportFormList);
+  rpc DeleteForm(SupportIdRequest) returns (SupportFormList);
+
+  // Forms: members.
+  rpc ListAvailableForms(rootsdk.Void) returns (SupportAvailableFormList);
+  rpc SubmitForm(SupportSubmitRequest) returns (SupportSubmission);
+  rpc ListMySubmissions(rootsdk.Void) returns (SupportSubmissionList);
+
+  // Submissions: staff (moderator+); DeleteSubmission is admin.
+  rpc ListSubmissions(SupportListSubmissionsRequest) returns (SupportSubmissionList);
+  rpc ReviewSubmission(SupportReviewRequest) returns (SupportSubmission);
+  rpc DeleteSubmission(SupportIdRequest) returns (SupportSubmissionList);
+
+  // Server -> client: something in the support module changed.
+  rpc BroadcastSupportChanged(SupportChangeEvent) returns (rootsdk.Void);
+}

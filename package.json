@@ -1,0 +1,37 @@
+{
+  "name": "@taproot/app",
+  "description": "Taproot: moderation, auto-mod, welcome messages, reminders and reaction roles for Root",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@rootsdk/client-app": "*",
+    "@rootsdk/server-app": "*",
+    "@taproot/gen-client": "file:./networking/gen/client",
+    "@taproot/gen-server": "file:./networking/gen/server",
+    "@taproot/gen-shared": "file:./networking/gen/shared"
+  },
+  "devDependencies": {
+    "@rootsdk/dev-tools": "*",
+    "typescript": "^5.8.2",
+    "@types/node": "^22.10.2"
+  },
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "test": "npm test --workspace=server",
+    "server": "npm run server --workspace=server",
+    "client": "npm run client --workspace=client",
+    "clean": "node clean.js",
+    "upload": "npm run build && node scripts/upload.js"
+  },
+  "workspaces": {
+    "packages": [
+      "./networking",
+      "./server",
+      "./client"
+    ]
+  }
+}

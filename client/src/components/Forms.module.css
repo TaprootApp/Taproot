@@ -1,0 +1,345 @@
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.labelRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--rootsdk-text-primary);
+}
+
+.labelHint {
+  font-size: 12px;
+  color: var(--rootsdk-text-tertiary);
+}
+
+.note {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--rootsdk-text-tertiary);
+}
+
+.noteError {
+  color: var(--rootsdk-error);
+}
+
+.input,
+.textarea {
+  width: 100%;
+  min-width: 0;
+  background: var(--rootsdk-input);
+  border: 1px solid var(--rootsdk-border);
+  border-radius: var(--tp-radius-lg);
+  padding: 7px 12px;
+  color: var(--rootsdk-text-primary);
+  caret-color: var(--rootsdk-text-primary);
+  font-size: 14px;
+  line-height: 20px;
+  transition: border-color 150ms;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--rootsdk-text-tertiary);
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--rootsdk-brand-primary);
+}
+
+.input[aria-invalid="true"],
+.textarea[aria-invalid="true"] {
+  border-color: var(--rootsdk-error);
+}
+
+.input:disabled,
+.textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.prefixWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.prefix {
+  position: absolute;
+  left: 12px;
+  color: var(--rootsdk-text-tertiary);
+  font-family: var(--tp-font-mono);
+  pointer-events: none;
+}
+
+.inputWithPrefix {
+  padding-left: 26px;
+}
+
+.textareaWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 72px;
+}
+
+.counter {
+  align-self: flex-end;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--rootsdk-text-tertiary);
+}
+
+.counterNear {
+  color: var(--rootsdk-warning);
+}
+
+.numberWrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.number {
+  font-variant-numeric: tabular-nums;
+}
+
+.suffix {
+  font-size: 13px;
+  color: var(--rootsdk-text-secondary);
+}
+
+/* Switch */
+.switch {
+  appearance: none;
+  position: relative;
+  flex-shrink: 0;
+  width: 40px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--rootsdk-highlight-strong);
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+
+.switch[data-state="checked"] {
+  background: var(--rootsdk-brand-primary);
+}
+
+.switch:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--rootsdk-text-white);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  transition: transform 150ms;
+}
+
+.switch[data-state="checked"] .thumb {
+  transform: translateX(18px);
+}
+
+.toggleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.toggleText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.toggleLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--rootsdk-text-primary);
+}
+
+.toggleDescription {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--rootsdk-text-secondary);
+}
+
+.disabled {
+  opacity: 0.6;
+}
+
+.disabled .toggleText {
+  cursor: not-allowed;
+}
+
+/* Select */
+.selectWrap {
+  position: relative;
+  min-width: 0;
+}
+
+.select {
+  appearance: none;
+  padding-right: 34px;
+  cursor: pointer;
+  text-overflow: ellipsis;
+}
+
+.select option,
+.select optgroup {
+  background: var(--rootsdk-background-tertiary);
+  color: var(--rootsdk-text-primary);
+}
+
+.selectChevron {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--rootsdk-text-tertiary);
+  pointer-events: none;
+}
+
+/* Duration */
+.durationWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.durationRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+}
+
+.duration {
+  /* Fits the longest empty label ("Until closed by hand") without cutting it off. */
+  width: 200px;
+  max-width: 100%;
+  font-family: var(--tp-font-mono);
+  font-size: 13px;
+}
+
+.durationEcho {
+  font-size: 12px;
+  color: var(--rootsdk-text-tertiary);
+}
+
+.durationError {
+  font-size: 12px;
+  color: var(--rootsdk-error);
+}
+
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.preset {
+  appearance: none;
+  padding: 2px 10px;
+  border: 1px solid var(--rootsdk-border);
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--rootsdk-text-secondary);
+  font-size: 12px;
+  line-height: 18px;
+  cursor: pointer;
+  transition: background-color 150ms, color 150ms, border-color 150ms;
+}
+
+.preset:hover:not(:disabled) {
+  background: var(--rootsdk-highlight-light);
+  color: var(--rootsdk-text-primary);
+}
+
+.presetActive {
+  border-color: var(--rootsdk-brand-primary);
+  color: var(--rootsdk-text-primary);
+}
+
+/* Chips (multi-selects) */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+  padding: 2px 4px 2px 10px;
+  border-radius: 9999px;
+  background: var(--rootsdk-highlight-normal);
+  color: var(--rootsdk-text-primary);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.chipMuted {
+  color: var(--rootsdk-text-tertiary);
+  font-style: italic;
+}
+
+.chipDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.chipLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chipRemove {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--rootsdk-text-tertiary);
+  cursor: pointer;
+}
+
+.chipRemove:hover {
+  background: var(--rootsdk-highlight-strong);
+  color: var(--rootsdk-text-primary);
+}

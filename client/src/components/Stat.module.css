@@ -1,0 +1,68 @@
+.stat {
+  appearance: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 16px;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: var(--rootsdk-background-secondary);
+  border: 1px solid var(--rootsdk-border);
+  border-radius: var(--tp-radius-lg);
+  min-width: 0;
+}
+
+.clickable {
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+
+.clickable:hover {
+  background: var(--rootsdk-highlight-light);
+}
+
+.label {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--rootsdk-text-secondary);
+}
+
+.value {
+  font-size: 26px;
+  line-height: 34px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--rootsdk-text-primary);
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--rootsdk-text-tertiary);
+}
+
+.neutral {
+  color: var(--rootsdk-text-primary);
+}
+
+.brand {
+  color: var(--rootsdk-brand-primary);
+}
+
+.success {
+  color: var(--tp-success);
+}
+
+.info {
+  color: var(--rootsdk-info);
+}
+
+.warning {
+  color: var(--rootsdk-warning);
+}
+
+.danger {
+  color: var(--rootsdk-error);
+}

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#15453a"/>
+      <stop offset="1" stop-color="#0f3329"/>
+    </linearGradient>
+    <linearGradient id="earth" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2b1f16"/>
+      <stop offset="1" stop-color="#1a130d"/>
+    </linearGradient>
+    <linearGradient id="leaf" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#22c55e"/>
+      <stop offset="1" stop-color="#a7f3c0"/>
+    </linearGradient>
+    <linearGradient id="root" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f6e7c8"/>
+      <stop offset="1" stop-color="#c9a36c"/>
+    </linearGradient>
+    <clipPath id="tile">
+      <rect width="512" height="512" rx="112"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#tile)">
+    <!-- Above ground / below ground -->
+    <rect width="512" height="280" fill="url(#sky)"/>
+    <rect y="280" width="512" height="232" fill="url(#earth)"/>
+    <path d="M0 280 C 110 268, 180 290, 256 280 S 410 268, 512 280" fill="none" stroke="#4d3a2a" stroke-width="6"/>
+
+    <!-- Taproot with rootlets -->
+    <g stroke="#dcc08f" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.9">
+      <path d="M249 318 C 232 324, 218 334, 206 350"/>
+      <path d="M262 356 C 280 362, 294 372, 305 388"/>
+      <path d="M252 394 C 240 400, 231 409, 224 421"/>
+    </g>
+    <path d="M241 280 C 241 340, 249 400, 256 462 C 263 400, 271 340, 271 280 Z" fill="url(#root)"/>
+
+    <!-- Seedling -->
+    <path d="M256 282 C 256 250, 256 226, 258 200" fill="none" stroke="#34d27a" stroke-width="12" stroke-linecap="round"/>
+    <path d="M254 222 C 214 226, 170 206, 150 158 C 204 146, 246 176, 254 222 Z" fill="url(#leaf)"/>
+    <path d="M260 204 C 292 202, 340 180, 364 118 C 300 110, 262 150, 260 204 Z" fill="url(#leaf)"/>
+    <path d="M254 220 C 226 206, 196 186, 170 162" fill="none" stroke="#15803d" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+    <path d="M261 202 C 288 186, 318 160, 346 128" fill="none" stroke="#15803d" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+  </g>
+</svg>

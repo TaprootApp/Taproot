@@ -1,0 +1,50 @@
+.badge {
+  --tone: var(--rootsdk-text-secondary);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  max-width: 100%;
+  padding: 1px 8px;
+  border-radius: 9999px;
+  font-size: 12px;
+  line-height: 18px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--tone);
+  background: color-mix(in srgb, var(--tone) 14%, transparent);
+  vertical-align: middle;
+}
+
+.neutral {
+  --tone: var(--rootsdk-text-secondary);
+  background: var(--rootsdk-highlight-light);
+}
+
+.brand {
+  --tone: var(--rootsdk-brand-primary);
+}
+
+.success {
+  --tone: var(--tp-success);
+}
+
+.info {
+  --tone: var(--rootsdk-info);
+}
+
+.warning {
+  --tone: var(--rootsdk-warning);
+}
+
+.danger {
+  --tone: var(--rootsdk-error);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}

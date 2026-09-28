@@ -1,0 +1,203 @@
+/* Shared styles for the staff moderation screens (Overview, Cases, Members). */
+
+.voided {
+  text-decoration: line-through;
+  color: var(--rootsdk-text-tertiary);
+}
+
+.caseId {
+  font-family: var(--tp-font-mono);
+  color: var(--rootsdk-text-tertiary);
+}
+
+.reason {
+  color: var(--rootsdk-text-secondary);
+  overflow-wrap: anywhere;
+}
+
+.rowActions {
+  display: inline-flex;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+.loadMore {
+  display: flex;
+  justify-content: center;
+  padding: 12px;
+  border-top: 1px solid var(--rootsdk-border);
+}
+
+/* Filter bar above the case log. */
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.filterAction {
+  flex: 0 1 200px;
+  min-width: 160px;
+}
+
+.filterMember {
+  flex: 1 1 260px;
+  min-width: 0;
+  max-width: 400px;
+}
+
+/* Member picker: text box with a results list below it. */
+.picker {
+  position: relative;
+}
+
+.pickerMenu {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 280px;
+  overflow-y: auto;
+  padding: 4px;
+  background: var(--rootsdk-background-primary);
+  border: 1px solid var(--rootsdk-border);
+  border-radius: var(--tp-radius-md);
+  box-shadow: var(--tp-shadow-lg);
+}
+
+.pickerNote {
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--rootsdk-text-tertiary);
+}
+
+/* A clickable member row (picker menu and the Members results list). */
+.memberRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: 0;
+  border-radius: var(--tp-radius-sm);
+  background: transparent;
+  color: var(--rootsdk-text-primary);
+  font: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.memberRow:hover,
+.memberRow:focus-visible {
+  background: var(--rootsdk-highlight-light);
+  outline: none;
+}
+
+.memberRowActive {
+  background: var(--rootsdk-highlight-normal);
+}
+
+.memberName {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.memberId {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: var(--tp-font-mono);
+  font-size: 11px;
+  color: var(--rootsdk-text-tertiary);
+}
+
+.avatar {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--rootsdk-highlight-normal);
+  color: var(--rootsdk-text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.avatarLarge {
+  width: 48px;
+  height: 48px;
+  font-size: 20px;
+}
+
+/* Members: search column + detail column, stacked on narrow screens. */
+.membersLayout {
+  display: grid;
+  grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .membersLayout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.resultList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 12px;
+}
+
+.detailHead {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+.detailName {
+  font-size: 18px;
+  line-height: 24px;
+  font-weight: 500;
+  color: var(--rootsdk-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(150px, 100%), 1fr));
+  gap: 12px 16px;
+}
+
+.factLabel {
+  display: block;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--rootsdk-text-tertiary);
+  margin-bottom: 2px;
+}
+
+.factValue {
+  font-size: 14px;
+  color: var(--rootsdk-text-primary);
+}
+
+.badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}

@@ -1,0 +1,101 @@
+/* Mod tools: member cards (notes, temp roles, voice) and the settings page. */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 12px;
+  background: var(--rootsdk-background-secondary);
+  border: 1px solid var(--rootsdk-border);
+  border-radius: var(--tp-radius-md);
+}
+
+.itemBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.noteText {
+  margin: 0;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--rootsdk-text-tertiary);
+}
+
+.adder {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.adderActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.inlineForm {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 8px 12px;
+  margin-top: 12px;
+}
+
+.inlineForm > * {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.inlineForm > .formButton {
+  flex: 0 0 auto;
+}
+
+.voiceStatus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.ruleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px 12px;
+  padding: 10px 12px;
+  background: var(--rootsdk-background-secondary);
+  border: 1px solid var(--rootsdk-border);
+  border-radius: var(--tp-radius-md);
+}
+
+.ruleRole {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.ruleDelay {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+
+.hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--rootsdk-text-secondary);
+}

@@ -1,0 +1,127 @@
+/* Levels and economy screens. */
+
+.progress {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--rootsdk-background-tertiary);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--rootsdk-brand-primary);
+  transition: width 0.3s ease;
+}
+
+.progressText {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--rootsdk-text-tertiary);
+  margin-top: 6px;
+}
+
+.big {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--rootsdk-text-primary);
+}
+
+.sub {
+  font-size: 13px;
+  color: var(--rootsdk-text-secondary);
+}
+
+.position {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--rootsdk-text-secondary);
+}
+
+.medal {
+  font-size: 16px;
+}
+
+.number {
+  font-variant-numeric: tabular-nums;
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--rootsdk-border);
+  font-size: 13px;
+  color: var(--rootsdk-text-secondary);
+}
+
+.pagerButtons {
+  display: flex;
+  gap: 6px;
+}
+
+.editorRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.editorRow > .grow {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.muted {
+  font-size: 13px;
+  color: var(--rootsdk-text-tertiary);
+}
+
+.shopRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--rootsdk-border);
+}
+
+.shopRow:first-child {
+  border-top: none;
+}
+
+.shopMain {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.shopName {
+  font-weight: 600;
+  color: var(--rootsdk-text-primary);
+}
+
+.shopMeta {
+  font-size: 12px;
+  color: var(--rootsdk-text-tertiary);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Edit/remove icons in a narrow table column: side by side, never wrapped. */
+.cellActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.danger {
+  margin-top: 4px;
+}

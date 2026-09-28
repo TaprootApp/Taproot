@@ -1,0 +1,65 @@
+:root {
+  --bg: #f6f8f5;
+  --surface: #ffffff;
+  --text: #16241d;
+  --muted: #56655d;
+  --border: #dde5df;
+  --accent: #15803d;
+  --accent-soft: #e5f5ea;
+  --root: #8a6a3d;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d1a15;
+    --surface: #13241d;
+    --text: #e8f5ec;
+    --muted: #9fb3a7;
+    --border: #22382e;
+    --accent: #4ade80;
+    --accent-soft: #173427;
+    --root: #dcc08f;
+  }
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 17px/1.65 Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+a { color: var(--accent); }
+.wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+
+header.site {
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+header.site .wrap { display: flex; align-items: center; gap: 12px; height: 64px; }
+header.site img { width: 36px; height: 36px; border-radius: 9px; }
+header.site a.brand { font-weight: 700; font-size: 19px; color: var(--text); text-decoration: none; }
+header.site nav { margin-left: auto; display: flex; gap: 18px; font-size: 15px; }
+header.site nav a { color: var(--muted); text-decoration: none; }
+header.site nav a:hover { color: var(--text); }
+
+.hero { padding: 64px 0 40px; text-align: center; }
+.hero img { width: 120px; height: 120px; border-radius: 28px; }
+.hero h1 { font-size: clamp(36px, 7vw, 56px); line-height: 1.1; margin: 20px 0 10px; letter-spacing: -1px; }
+.hero p { color: var(--muted); font-size: 19px; margin: 0 auto; max-width: 560px; }
+
+.features { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin: 24px 0 56px; }
+.feature { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; }
+.feature h3 { margin: 0 0 4px; font-size: 16px; }
+.feature p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.5; }
+
+article.doc { padding: 48px 0 64px; }
+article.doc h1 { font-size: clamp(30px, 6vw, 40px); line-height: 1.15; margin: 0 0 6px; letter-spacing: -0.5px; }
+article.doc .meta { color: var(--muted); margin: 0 0 32px; font-size: 15px; }
+article.doc h2 { font-size: 21px; margin: 36px 0 8px; }
+article.doc ul { padding-left: 22px; }
+article.doc li { margin: 6px 0; }
+.note { background: var(--accent-soft); border-radius: 12px; padding: 14px 18px; margin: 20px 0; }
+
+footer.site { border-top: 1px solid var(--border); color: var(--muted); font-size: 14px; padding: 24px 0 40px; }
+footer.site .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; }

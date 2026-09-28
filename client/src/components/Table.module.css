@@ -1,0 +1,93 @@
+.scroller {
+  width: 100%;
+  overflow-x: auto;
+  transition: opacity 150ms;
+}
+
+.refreshing {
+  opacity: 0.6;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.table th {
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  text-align: left;
+  color: var(--rootsdk-text-tertiary);
+  border-bottom: 1px solid var(--rootsdk-border);
+  white-space: nowrap;
+}
+
+.table td {
+  padding: 8px 12px;
+  color: var(--rootsdk-text-primary);
+  border-bottom: 1px solid var(--rootsdk-border);
+  vertical-align: middle;
+}
+
+.table th:first-child,
+.table td:first-child {
+  padding-left: 16px;
+}
+
+.table th:last-child,
+.table td:last-child {
+  padding-right: 16px;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.nowrap {
+  white-space: nowrap;
+  max-width: 320px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wrap {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  min-width: 160px;
+}
+
+.clickable {
+  cursor: pointer;
+  transition: background-color 150ms;
+}
+
+.clickable:hover {
+  background: var(--rootsdk-highlight-light);
+}
+
+.clickable:focus-visible {
+  outline: 2px solid var(--rootsdk-brand-primary);
+  outline-offset: -2px;
+}
+
+.selected,
+.selected:hover {
+  background: var(--rootsdk-highlight-normal);
+}
+
+.noRows {
+  padding: 16px;
+  color: var(--rootsdk-text-tertiary);
+  font-size: 13px;
+}
+
+@media (max-width: 640px) {
+  .hideOnMobile {
+    display: none;
+  }
+}

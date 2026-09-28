@@ -1,0 +1,7 @@
+{
+  "name": "@taproot/networking",
+  "license": "MIT",
+  "scripts": {
+    "build": "rootsdk build proto"
+  }
+}

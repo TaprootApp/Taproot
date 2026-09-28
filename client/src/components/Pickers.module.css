@@ -1,0 +1,29 @@
+.multi {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 24px;
+  align-items: center;
+}
+
+.empty {
+  font-size: 13px;
+  color: var(--rootsdk-text-tertiary);
+}
+
+.adder {
+  max-width: 320px;
+}
+
+.error {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--rootsdk-error);
+}

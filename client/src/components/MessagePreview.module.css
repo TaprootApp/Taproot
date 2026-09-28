@@ -1,0 +1,131 @@
+.bare {
+  min-width: 0;
+}
+
+.message {
+  display: flex;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--rootsdk-background-primary);
+  border: 1px solid var(--rootsdk-border);
+  border-radius: var(--tp-radius-lg);
+  min-width: 0;
+}
+
+.avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--tp-success) 18%, var(--rootsdk-background-tertiary));
+  font-size: 18px;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+}
+
+.meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.author {
+  font-weight: 500;
+  color: var(--rootsdk-text-primary);
+}
+
+.appTag {
+  padding: 0 4px;
+  border-radius: 4px;
+  background: var(--rootsdk-brand-primary);
+  color: var(--rootsdk-text-white);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 14px;
+}
+
+.time {
+  font-size: 12px;
+  color: var(--rootsdk-text-tertiary);
+}
+
+.body {
+  color: var(--rootsdk-text-primary);
+  font-size: 14px;
+  line-height: 20px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.empty {
+  color: var(--rootsdk-text-tertiary);
+  font-style: italic;
+  font-size: 13px;
+}
+
+.code {
+  padding: 1px 4px;
+  border-radius: 4px;
+  background: var(--rootsdk-background-tertiary);
+  font-size: 12.5px;
+}
+
+.codeBlock {
+  margin: 4px 0;
+  padding: 8px 10px;
+  border-radius: var(--tp-radius-md);
+  background: var(--rootsdk-background-tertiary);
+  border: 1px solid var(--rootsdk-border);
+  font-size: 12.5px;
+  white-space: pre-wrap;
+}
+
+.quote {
+  margin: 2px 0;
+  padding-left: 10px;
+  border-left: 3px solid var(--rootsdk-highlight-strong);
+  color: var(--rootsdk-text-secondary);
+}
+
+.link {
+  color: var(--rootsdk-link);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.chip {
+  display: inline;
+  padding: 0 3px;
+  border-radius: 4px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.mentionChip,
+.roleChip {
+  color: var(--rootsdk-brand-primary);
+  background: color-mix(in srgb, var(--rootsdk-brand-primary) 16%, transparent);
+}
+
+.channelChip {
+  color: var(--rootsdk-link);
+  background: color-mix(in srgb, var(--rootsdk-link) 14%, transparent);
+}
+
+.placeholder {
+  padding: 0 3px;
+  border-radius: 4px;
+  font-family: var(--tp-font-mono);
+  font-size: 12.5px;
+  color: var(--rootsdk-warning);
+  background: color-mix(in srgb, var(--rootsdk-warning) 14%, transparent);
+}

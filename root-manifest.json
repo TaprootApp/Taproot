@@ -1,0 +1,78 @@
+{
+  "id": "ADGIY_B2hAm15r_wTvcbNA",
+  "version": "1.1.2",
+  "package": {
+    "client": {
+      "deploy": "client/dist"
+    },
+    "server": {
+      "launch": "server/dist/main.js",
+      "deploy": [
+        "server/dist",
+        "networking/gen/server"
+      ],
+      "nodeModules": [
+        "node_modules"
+      ]
+    }
+  },
+  "settings": {
+    "groups": [
+      {
+        "key": "general",
+        "title": "Staff",
+        "items": [
+          {
+            "key": "admins",
+            "title": "Admins",
+            "description": "Can configure Taproot (auto-mod, welcome messages, reaction roles) and use every moderation command. The community owner, and roles with Full Control or Manage Community, are always admins.",
+            "required": false,
+            "confirmation": "Save",
+            "roleOrMember": {
+              "selectBehavior": "roleMultiAndUserMulti"
+            }
+          },
+          {
+            "key": "moderators",
+            "title": "Moderators",
+            "description": "Can warn, mute, kick, ban, purge and lock. Roles that can kick or ban members are always moderators.",
+            "required": false,
+            "confirmation": "Save",
+            "roleOrMember": {
+              "selectBehavior": "roleMultiAndUserMulti"
+            }
+          },
+          {
+            "key": "exempt",
+            "title": "Exempt from auto-mod",
+            "description": "Members and roles auto-mod never filters, such as trusted members or other bots. Staff are always exempt.",
+            "required": false,
+            "confirmation": "Save",
+            "roleOrMember": {
+              "selectBehavior": "roleMultiAndUserMulti"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "permissions": {
+    "community": {
+      "kick": true,
+      "createBan": true,
+      "manageBans": true,
+      "manageRoles": true,
+      "manageCommunity": true
+    },
+    "channel": {
+      "fullControl": true,
+      "createMessage": true,
+      "createMessageMention": true,
+      "createMessageReaction": true,
+      "deleteMessageOther": true,
+      "viewMessageHistory": true,
+      "voiceMuteOther": true,
+      "voiceKick": true
+    }
+  }
+}

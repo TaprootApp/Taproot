@@ -1,0 +1,162 @@
+syntax = "proto3";
+
+import "rootsdk/types.proto";
+
+// ============================================================================
+// Events module: giveaways, polls and the starboard.
+// Implemented in server/src/modules/events/service.ts.
+//
+// No proto package, so every message and enum is prefixed with "Events".
+// Times are epoch milliseconds in double *_at_ms fields; durations are
+// milliseconds in duration_ms.
+// ============================================================================
+
+// ---------------------------------------------------------------------------
+// Giveaways (moderator+)
+// ---------------------------------------------------------------------------
+
+enum EventsGiveawayState {
+  EVENTS_GIVEAWAY_STATE_UNSPECIFIED = 0;
+  EVENTS_GIVEAWAY_STATE_RUNNING = 1;
+  EVENTS_GIVEAWAY_STATE_ENDED = 2;
+  EVENTS_GIVEAWAY_STATE_CANCELLED = 3;
+}
+
+message EventsMember {
+  string user_id = 1;
+  string nickname = 2;
+}
+
+message EventsGiveaway {
+  int32 id = 1;
+  string channel_id = 2;
+  string channel_name = 3;
+  string prize = 4;
+  int32 winner_count = 5;
+  optional string required_role_id = 6;
+  EventsMember host = 7;
+  double ends_at_ms = 8;
+  EventsGiveawayState state = 9;
+  int32 entry_count = 10;
+  // Everyone drawn so far, first draw then rerolls, in order.
+  repeated EventsMember winners = 11;
+  double created_at_ms = 12;
+  // 0 while running.
+  double ended_at_ms = 13;
+}
+
+message EventsGiveawayList {
+  repeated EventsGiveaway giveaways = 1;
+}
+
+message EventsCreateGiveawayRequest {
+  string channel_id = 1;
+  string prize = 2;
+  // 1 to 50.
+  int32 winner_count = 3;
+  // 1 minute to 90 days.
+  double duration_ms = 4;
+  optional string required_role_id = 5;
+}
+
+message EventsIdRequest {
+  int32 id = 1;
+}
+
+message EventsRerollRequest {
+  int32 id = 1;
+  // New winners to draw (1 to 50); previous winners are left out.
+  int32 count = 2;
+}
+
+// ---------------------------------------------------------------------------
+// Polls (moderator+)
+// ---------------------------------------------------------------------------
+
+message EventsPollOption {
+  string label = 1;
+  int32 votes = 2;
+}
+
+message EventsPoll {
+  int32 id = 1;
+  string channel_id = 2;
+  string channel_name = 3;
+  string question = 4;
+  repeated EventsPollOption options = 5;
+  // 0 when the poll stays open until ended by hand.
+  double ends_at_ms = 6;
+  bool closed = 7;
+  int32 total_votes = 8;
+  EventsMember created_by = 9;
+  double created_at_ms = 10;
+  double closed_at_ms = 11;
+}
+
+message EventsPollList {
+  repeated EventsPoll polls = 1;
+}
+
+message EventsCreatePollRequest {
+  string channel_id = 1;
+  string question = 2;
+  // 2 to 10 options.
+  repeated string options = 3;
+  // 0 = open until ended; otherwise 1 minute to 30 days.
+  double duration_ms = 4;
+}
+
+// ---------------------------------------------------------------------------
+// Starboard (admin)
+// ---------------------------------------------------------------------------
+
+message EventsStarboardConfig {
+  bool enabled = 1;
+  optional string channel_id = 2;
+  // A :shortcode:, e.g. ":star:".
+  string emoji = 3;
+  // Reactions needed to reach the starboard (1 to 100).
+  int32 threshold = 4;
+  // Count the author's own reaction.
+  bool self_star = 5;
+  repeated string ignored_channel_ids = 6;
+  // Remove the starboard post when the count drops below the threshold.
+  bool remove_below_threshold = 7;
+}
+
+message EventsStarboardStats {
+  int32 posts = 1;
+  int32 total_stars = 2;
+}
+
+message EventsStarboardView {
+  EventsStarboardConfig config = 1;
+  EventsStarboardStats stats = 2;
+}
+
+// Payload of BroadcastEventsChanged. area is "events:giveaways",
+// "events:polls" or "events:starboard".
+message EventsChangeEvent {
+  string area = 1;
+}
+
+service EventsService {
+  // Moderator+.
+  rpc ListGiveaways(rootsdk.Void) returns (EventsGiveawayList);
+  rpc CreateGiveaway(EventsCreateGiveawayRequest) returns (EventsGiveaway);
+  rpc EndGiveaway(EventsIdRequest) returns (EventsGiveaway);
+  rpc RerollGiveaway(EventsRerollRequest) returns (EventsGiveaway);
+  rpc CancelGiveaway(EventsIdRequest) returns (EventsGiveaway);
+
+  // Moderator+.
+  rpc ListPolls(rootsdk.Void) returns (EventsPollList);
+  rpc CreatePoll(EventsCreatePollRequest) returns (EventsPoll);
+  rpc EndPoll(EventsIdRequest) returns (EventsPoll);
+
+  // Admin.
+  rpc GetStarboard(rootsdk.Void) returns (EventsStarboardView);
+  rpc UpdateStarboard(EventsStarboardConfig) returns (EventsStarboardView);
+
+  // To all clients whenever giveaways, polls or starboard settings change.
+  rpc BroadcastEventsChanged(EventsChangeEvent) returns (rootsdk.Void);
+}

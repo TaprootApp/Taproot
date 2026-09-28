@@ -1,0 +1,45 @@
+.bar {
+  display: flex;
+  gap: 20px;
+  border-bottom: 1px solid var(--rootsdk-border);
+  margin-bottom: 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tab {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 0;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid transparent;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  color: var(--rootsdk-text-secondary);
+  cursor: pointer;
+  transition: color 150ms, border-color 150ms;
+}
+
+.tab:hover {
+  color: var(--rootsdk-text-primary);
+}
+
+.tab[aria-selected="true"] {
+  color: var(--rootsdk-text-primary);
+  border-bottom-color: var(--rootsdk-brand-primary);
+}
+
+.count {
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 9999px;
+  background: var(--rootsdk-highlight-normal);
+  font-size: 11px;
+  line-height: 18px;
+  text-align: center;
+  color: var(--rootsdk-text-secondary);
+}

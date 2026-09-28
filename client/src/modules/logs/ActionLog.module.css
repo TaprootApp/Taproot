@@ -1,0 +1,40 @@
+/* Action log settings page. */
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.groupTitle {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--rootsdk-text-tertiary);
+}
+
+.eventRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--rootsdk-border);
+}
+
+.eventRow:last-child {
+  border-bottom: none;
+}
+
+.override {
+  width: 240px;
+  max-width: 100%;
+}
+
+.bulk {
+  display: flex;
+  gap: 4px;
+}

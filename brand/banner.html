@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;800&display=block" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    width: 1920px; height: 1080px; overflow: hidden;
+    font-family: Inter, "DejaVu Sans", sans-serif;
+    background:
+      radial-gradient(1200px 700px at 78% 30%, rgba(52, 210, 122, 0.16), transparent 60%),
+      linear-gradient(180deg, #123d32 0%, #0d2b23 58%, #1f1710 58%, #150f0a 100%);
+    color: #eafff2;
+    position: relative;
+  }
+  /* The ground line runs across the whole banner, like in the icon. */
+  .ground {
+    position: absolute; left: 0; right: 0; top: 626px; height: 6px;
+    background: #4d3a2a;
+    border-radius: 3px;
+  }
+  .roots {
+    position: absolute; left: 0; top: 0; width: 1920px; height: 1080px;
+  }
+  .content {
+    position: absolute; left: 160px; top: 200px;
+    display: flex; align-items: center; gap: 64px;
+  }
+  .icon { width: 300px; height: 300px; filter: drop-shadow(0 24px 48px rgba(0, 0, 0, 0.35)); }
+  h1 { font-size: 168px; font-weight: 800; letter-spacing: -6px; line-height: 1; }
+  .tagline { margin-top: 18px; font-size: 52px; font-weight: 500; color: #a7f3c0; letter-spacing: -1px; }
+  .features {
+    position: absolute; left: 160px; top: 720px;
+    display: flex; flex-wrap: wrap; gap: 20px; max-width: 1600px;
+  }
+  .chip {
+    font-size: 34px; font-weight: 600; color: #f6e7c8;
+    padding: 16px 30px; border-radius: 999px;
+    background: rgba(246, 231, 200, 0.08);
+    border: 2px solid rgba(220, 192, 143, 0.35);
+  }
+  .foot {
+    position: absolute; left: 160px; bottom: 90px;
+    font-size: 30px; font-weight: 500; color: rgba(246, 231, 200, 0.6);
+  }
+</style>
+</head>
+<body>
+  <div class="ground"></div>
+  <!-- A faint taproot trailing off to the right, echoing the icon -->
+  <svg class="roots" viewBox="0 0 1920 1080" aria-hidden="true">
+    <g fill="none" stroke="#dcc08f" stroke-linecap="round" opacity="0.18">
+      <path d="M1790 629 C 1792 760, 1806 900, 1822 1080" stroke-width="22"/>
+      <path d="M1795 740 C 1765 755, 1742 778, 1726 808" stroke-width="9"/>
+      <path d="M1803 840 C 1845 858, 1872 885, 1890 920" stroke-width="9"/>
+      <path d="M1811 950 C 1780 965, 1760 990, 1748 1024" stroke-width="9"/>
+    </g>
+  </svg>
+  <div class="content">
+    <img class="icon" src="icon-512.png" alt="">
+    <div>
+      <h1>Taproot</h1>
+      <div class="tagline">Moderation that runs deep.</div>
+    </div>
+  </div>
+  <div class="features">
+    <span class="chip">Moderation &amp; cases</span>
+    <span class="chip">Auto-mod</span>
+    <span class="chip">Welcome &amp; autoroles</span>
+    <span class="chip">Reaction roles</span>
+    <span class="chip">Reminders &amp; announcements</span>
+    <span class="chip">Custom commands</span>
+  </div>
+  <div class="foot">A staff dashboard in its own channel, plus familiar ! commands in chat.</div>
+</body>
+</html>

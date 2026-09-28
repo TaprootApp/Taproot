@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;800&display=block" rel="stylesheet">
+<style>
+  * { margin: 0; box-sizing: border-box; }
+  /* 2400x500 (4.8:1), the shape Root's listing shows. Everything that matters
+     sits in the centre so extra cropping at the sides loses only background. */
+  body { width: 2400px; height: 500px; overflow: hidden; font-family: Inter, "DejaVu Sans", sans-serif; position: relative; }
+  svg.scene { position: absolute; inset: 0; }
+  .name, .tagline { position: absolute; left: 1022px; white-space: nowrap; }
+  /* The name grows above the ground line; the tagline runs deep below it. */
+  .name { top: 112px; font-size: 156px; font-weight: 800; letter-spacing: -6px; line-height: 1; color: #eafff2; }
+  .tagline { top: 318px; font-size: 50px; font-weight: 500; letter-spacing: -1px; color: #f6e7c8; }
+</style>
+</head>
+<body>
+  <svg class="scene" viewBox="0 0 2400 500" width="2400" height="500" aria-hidden="true">
+    <defs>
+      <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#15453a"/>
+        <stop offset="1" stop-color="#0f3329"/>
+      </linearGradient>
+      <linearGradient id="earth" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#2b1f16"/>
+        <stop offset="1" stop-color="#17110b"/>
+      </linearGradient>
+      <radialGradient id="glow" cx="0.5" cy="0.45" r="0.5">
+        <stop offset="0" stop-color="#34d27a" stop-opacity="0.16"/>
+        <stop offset="1" stop-color="#34d27a" stop-opacity="0"/>
+      </radialGradient>
+      <linearGradient id="leaf" x1="0" y1="1" x2="1" y2="0">
+        <stop offset="0" stop-color="#22c55e"/>
+        <stop offset="1" stop-color="#a7f3c0"/>
+      </linearGradient>
+      <linearGradient id="root" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#f6e7c8"/>
+        <stop offset="1" stop-color="#c9a36c"/>
+      </linearGradient>
+    </defs>
+
+    <rect width="2400" height="280" fill="url(#sky)"/>
+    <rect y="280" width="2400" height="220" fill="url(#earth)"/>
+    <ellipse cx="1200" cy="220" rx="900" ry="260" fill="url(#glow)"/>
+    <path d="M0 280 C 300 270, 520 290, 800 280 S 1300 268, 1600 280 S 2100 290, 2400 278" fill="none" stroke="#4d3a2a" stroke-width="7"/>
+
+    <!-- Faint roots at the edges; fine to lose when cropped -->
+    <g fill="none" stroke="#dcc08f" stroke-linecap="round" opacity="0.13">
+      <path d="M160 283 C 162 360, 170 430, 182 500" stroke-width="18"/>
+      <path d="M165 350 C 140 362, 122 380, 110 404" stroke-width="7"/>
+      <path d="M172 420 C 200 432, 218 450, 228 474" stroke-width="7"/>
+      <path d="M2250 283 C 2248 360, 2240 430, 2228 500" stroke-width="18"/>
+      <path d="M2246 345 C 2272 358, 2290 376, 2300 400" stroke-width="7"/>
+      <path d="M2240 425 C 2212 437, 2195 455, 2186 480" stroke-width="7"/>
+    </g>
+
+    <!-- The seedling from the icon, planted on the banner's ground line.
+         Icon coordinates: ground at y=280, stem at x=256. -->
+    <g transform="translate(855 280) scale(1.1) translate(-256 -280)">
+      <g stroke="#dcc08f" stroke-width="7" stroke-linecap="round" fill="none" opacity="0.9">
+        <path d="M249 318 C 232 324, 218 334, 206 350"/>
+        <path d="M262 356 C 280 362, 294 372, 305 388"/>
+        <path d="M252 394 C 240 400, 231 409, 224 421"/>
+      </g>
+      <path d="M241 280 C 241 340, 249 400, 256 462 C 263 400, 271 340, 271 280 Z" fill="url(#root)"/>
+      <path d="M256 282 C 256 250, 256 226, 258 200" fill="none" stroke="#34d27a" stroke-width="12" stroke-linecap="round"/>
+      <path d="M254 222 C 214 226, 170 206, 150 158 C 204 146, 246 176, 254 222 Z" fill="url(#leaf)"/>
+      <path d="M260 204 C 292 202, 340 180, 364 118 C 300 110, 262 150, 260 204 Z" fill="url(#leaf)"/>
+      <path d="M254 220 C 226 206, 196 186, 170 162" fill="none" stroke="#15803d" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+      <path d="M261 202 C 288 186, 318 160, 346 128" fill="none" stroke="#15803d" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+    </g>
+  </svg>
+  <div class="name">Taproot</div>
+  <div class="tagline">Moderation that runs deep.</div>
+</body>
+</html>

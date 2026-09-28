@@ -1,0 +1,41 @@
+# Dependencies and build output
+node_modules/
+dist/
+build-test/
+networking/gen/
+client/dist/
+server/dist/
+server/build-test/
+server/devtools-dist/
+*.tsbuildinfo
+coverage/
+
+# Secrets and local environment (dev tokens, upload tokens)
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+
+# Local Root dev host data and generated manifests
+*.sqlite3
+*.sqlite3-journal
+root-manifest.dev.json
+root-manifest.seed.json
+
+# Release packages
+*.pkg
+
+# Demo and review material (screenshots, video, reviewer notes)
+demo/
+
+# Cloudflare Wrangler state
+.wrangler/
+
+# Logs and editor/OS clutter
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

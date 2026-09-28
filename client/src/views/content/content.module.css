@@ -1,0 +1,164 @@
+/* Shared styles for the content screens (custom commands, announcements,
+   reaction roles) and the member page. */
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--rootsdk-border);
+}
+
+.search {
+  flex: 1 1 auto;
+  max-width: 320px;
+}
+
+.code {
+  font-family: var(--tp-font-mono);
+  font-size: 13px;
+  color: var(--rootsdk-text-primary);
+  background: var(--rootsdk-background-tertiary);
+  border-radius: var(--tp-radius-sm);
+  padding: 1px 6px;
+  white-space: nowrap;
+}
+
+.clip {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--rootsdk-text-secondary);
+}
+
+.cellActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.tokens {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.token {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  padding: 3px 8px;
+  border: 1px solid var(--rootsdk-border);
+  border-radius: var(--tp-radius-sm);
+  background: var(--rootsdk-background-tertiary);
+  color: var(--rootsdk-text-secondary);
+  font-size: 12px;
+  line-height: 16px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.token:hover {
+  border-color: var(--rootsdk-brand-primary);
+  color: var(--rootsdk-text-primary);
+}
+
+.token code {
+  font-family: var(--tp-font-mono);
+  color: var(--rootsdk-text-primary);
+}
+
+.previewLabel {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--rootsdk-text-tertiary);
+  margin-bottom: 6px;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.listRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--rootsdk-border);
+  min-width: 0;
+}
+
+.listRow:first-child {
+  border-top: none;
+}
+
+.listMain {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.listTitle {
+  color: var(--rootsdk-text-primary);
+  font-size: 14px;
+  line-height: 20px;
+  overflow-wrap: anywhere;
+}
+
+.listMeta {
+  color: var(--rootsdk-text-tertiary);
+  font-size: 12px;
+  line-height: 16px;
+  margin-top: 2px;
+}
+
+.emoji {
+  flex: 0 0 auto;
+  /* Wide enough for common shortcodes (:video_game:, :headphones:) so the role column lines up. */
+  min-width: 128px;
+  font-family: var(--tp-font-mono);
+  font-size: 13px;
+  color: var(--rootsdk-text-primary);
+}
+
+.swatch {
+  flex: 0 0 auto;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--rootsdk-text-tertiary);
+}
+
+.hint {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--rootsdk-text-secondary);
+}
+
+.panels {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (max-width: 560px) {
+  .emoji {
+    min-width: 0;
+  }
+  .search {
+    max-width: none;
+  }
+}
+
+.bannerWrap {
+  padding: 12px 16px 0;
+}

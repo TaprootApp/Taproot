@@ -1,0 +1,153 @@
+/* Styles for the events pages: giveaways, polls and starboard settings. */
+
+.split {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.cellActions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.prize {
+  color: var(--rootsdk-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.meta {
+  color: var(--rootsdk-text-tertiary);
+  font-size: 12px;
+  line-height: 16px;
+  margin-top: 2px;
+  overflow-wrap: anywhere;
+}
+
+.optionRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.optionRow > :nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+
+.optionNumber {
+  flex: 0 0 auto;
+  width: 24px;
+  text-align: center;
+}
+
+.polls {
+  display: flex;
+  flex-direction: column;
+}
+
+.poll {
+  padding: 14px 16px;
+  border-top: 1px solid var(--rootsdk-border);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.poll:first-child {
+  border-top: none;
+}
+
+.pollHead {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.pollTitle {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-weight: 600;
+  color: var(--rootsdk-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.result {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 4px 12px;
+  align-items: center;
+}
+
+.resultLabel {
+  font-size: 13px;
+  color: var(--rootsdk-text-primary);
+  overflow-wrap: anywhere;
+}
+
+.resultValue {
+  font-size: 12px;
+  color: var(--rootsdk-text-secondary);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.track {
+  grid-column: 1 / -1;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--rootsdk-background-tertiary);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: 3px;
+  background: var(--rootsdk-brand-primary);
+  transition: width 0.3s ease;
+}
+
+.leader {
+  background: var(--rootsdk-success, var(--rootsdk-brand-primary));
+}
+
+.hint {
+  font-size: 13px;
+  line-height: 18px;
+  color: var(--rootsdk-text-secondary);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.saveBar {
+  position: sticky;
+  bottom: 12px;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 10px 12px 10px 16px;
+  background: var(--rootsdk-background-tertiary);
+  border: 1px solid var(--rootsdk-border);
+  border-radius: var(--tp-radius-lg);
+  box-shadow: var(--tp-shadow-lg);
+}
+
+.saveText {
+  font-size: 13px;
+  color: var(--rootsdk-text-secondary);
+}
+
+.saveActions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}

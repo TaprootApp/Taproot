@@ -1,0 +1,149 @@
+syntax = "proto3";
+
+import "rootsdk/types.proto";
+
+// ============================================================================
+// Mod tools module (server/src/modules/modtools): moderator notes, temp roles,
+// voice moderation, changing a mute or temp ban's length, timed autoroles and
+// member notifications on moderation actions.
+//
+// There is no proto package, so every message and enum is prefixed with
+// "Modtools". Times are epoch milliseconds in double *_at_ms fields;
+// durations are milliseconds in double *_ms fields.
+// ============================================================================
+
+message ModtoolsUserRequest {
+  string user_id = 1;
+}
+
+message ModtoolsIdRequest {
+  int32 id = 1;
+}
+
+message ModtoolsResult {
+  // What happened, in plain words (shown as a toast).
+  string message = 1;
+}
+
+// --- Notes -------------------------------------------------------------------
+
+// Staff-only note about a member. Never shown to members.
+message ModtoolsNote {
+  int32 id = 1;
+  string user_id = 2;
+  string text = 3;
+  string author_id = 4;
+  string author_name = 5;
+  double created_at_ms = 6;
+}
+
+message ModtoolsAddNoteRequest {
+  string user_id = 1;
+  string text = 2;
+}
+
+// --- Temp roles --------------------------------------------------------------
+
+message ModtoolsTempRole {
+  int32 id = 1;
+  string user_id = 2;
+  string user_name = 3;
+  string role_id = 4;
+  // Last known role name; empty if the role was deleted.
+  string role_name = 5;
+  double expires_at_ms = 6;
+  string added_by_name = 7;
+  double created_at_ms = 8;
+}
+
+message ModtoolsTempRoleList {
+  repeated ModtoolsTempRole temp_roles = 1;
+}
+
+message ModtoolsAddTempRoleRequest {
+  string user_id = 1;
+  string role_id = 2;
+  double duration_ms = 3;
+}
+
+// --- Voice -------------------------------------------------------------------
+
+enum ModtoolsVoiceAction {
+  MODTOOLS_VOICE_ACTION_UNSPECIFIED = 0;
+  // Server mute; re-applied whenever the member joins voice until vunmute.
+  MODTOOLS_VOICE_ACTION_MUTE = 1;
+  MODTOOLS_VOICE_ACTION_UNMUTE = 2;
+  // Disconnect from the current voice channel.
+  MODTOOLS_VOICE_ACTION_KICK = 3;
+}
+
+message ModtoolsVoiceRequest {
+  string user_id = 1;
+  ModtoolsVoiceAction action = 2;
+}
+
+// --- Member card -------------------------------------------------------------
+
+message ModtoolsMemberInfo {
+  repeated ModtoolsNote notes = 1;
+  repeated ModtoolsTempRole temp_roles = 2;
+  // Taproot keeps this member server-muted in voice.
+  bool voice_muted = 3;
+  // The voice channel they're in right now; empty if none.
+  string voice_channel_id = 4;
+  string voice_channel_name = 5;
+}
+
+// --- Durations ---------------------------------------------------------------
+
+message ModtoolsDurationRequest {
+  // A mute or ban case.
+  int32 case_id = 1;
+  // New remaining length from now; 0 makes a mute indefinite or a ban permanent.
+  double duration_ms = 2;
+}
+
+// --- Settings (admin) --------------------------------------------------------
+
+message ModtoolsTimedAutorole {
+  string role_id = 1;
+  // Time after joining; at least one minute.
+  double delay_ms = 2;
+}
+
+message ModtoolsConfig {
+  repeated ModtoolsTimedAutorole timed_autoroles = 1;
+  // Send the member a generic push notification (no reason) when they are...
+  bool notify_warn = 2;
+  bool notify_mute = 3;
+  bool notify_kick = 4;
+  bool notify_ban = 5;
+}
+
+message ModtoolsChangeEvent {
+  // "notes", "temproles", "voice" or "config".
+  string area = 1;
+}
+
+// Moderator+ unless noted. Implemented in server/src/modules/modtools/service.ts.
+service ModtoolsService {
+  rpc GetMember(ModtoolsUserRequest) returns (ModtoolsMemberInfo);
+  rpc AddNote(ModtoolsAddNoteRequest) returns (ModtoolsNote);
+  rpc DeleteNote(ModtoolsIdRequest) returns (rootsdk.Void);
+
+  rpc ListTempRoles(rootsdk.Void) returns (ModtoolsTempRoleList);
+  // Roles with staff permissions need an admin.
+  rpc AddTempRole(ModtoolsAddTempRoleRequest) returns (ModtoolsResult);
+  // Takes the role away now.
+  rpc RemoveTempRole(ModtoolsIdRequest) returns (ModtoolsResult);
+
+  rpc VoiceAction(ModtoolsVoiceRequest) returns (ModtoolsResult);
+  rpc ChangeDuration(ModtoolsDurationRequest) returns (ModtoolsResult);
+
+  // Admin.
+  rpc GetConfig(rootsdk.Void) returns (ModtoolsConfig);
+  rpc UpdateConfig(ModtoolsConfig) returns (ModtoolsConfig);
+
+  // To staff clients after any change (GUI, command or job).
+  rpc BroadcastModtoolsChanged(ModtoolsChangeEvent) returns (rootsdk.Void);
+}

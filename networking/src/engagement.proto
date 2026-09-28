@@ -1,0 +1,196 @@
+syntax = "proto3";
+
+import "rootsdk/types.proto";
+
+// ============================================================================
+// Engagement module: levels/XP and the community currency.
+// Implemented in server/src/modules/engagement/service.ts.
+//
+// Same conventions as taproot.proto: times are epoch ms in double *_at_ms,
+// failures throw TaprootError, every RPC checks the caller's level on the
+// server. Amounts are whole numbers capped at 1,000,000,000, so int32 fits.
+// ============================================================================
+
+enum EngagementBoard {
+  ENGAGEMENT_BOARD_LEVELS = 0;
+  ENGAGEMENT_BOARD_MONEY = 1;
+}
+
+message EngagementCurrency {
+  string name = 1;
+  string symbol = 2;
+}
+
+// The caller's own standing (everyone).
+message EngagementMe {
+  bool levels_enabled = 1;
+  int32 xp = 2;
+  int32 level = 3;
+  // XP earned since reaching `level`, and XP from `level` to the next one.
+  int32 level_xp = 4;
+  int32 level_xp_needed = 5;
+  // Position on the levels board; 0 when the member has no XP yet.
+  int32 xp_rank = 6;
+  bool economy_enabled = 7;
+  int32 balance = 8;
+  // Position on the currency board; 0 when the balance is 0.
+  int32 money_rank = 9;
+  int32 daily_streak = 10;
+  // When daily/work can next be used; 0 = now.
+  double next_daily_at_ms = 11;
+  double next_work_at_ms = 12;
+  EngagementCurrency currency = 13;
+}
+
+message EngagementClaimResult {
+  // Amount paid out.
+  int32 amount = 1;
+  EngagementMe me = 2;
+}
+
+message EngagementLeaderboardRequest {
+  EngagementBoard board = 1;
+  // 1-based.
+  int32 page = 2;
+}
+
+message EngagementLeaderboardEntry {
+  int32 position = 1;
+  string user_id = 2;
+  string name = 3;
+  int32 xp = 4;
+  int32 level = 5;
+  int32 balance = 6;
+}
+
+message EngagementLeaderboard {
+  EngagementBoard board = 1;
+  int32 page = 2;
+  int32 pages = 3;
+  int32 total = 4;
+  repeated EngagementLeaderboardEntry entries = 5;
+  EngagementCurrency currency = 6;
+  // Whether the board's feature (levels or economy) is switched on.
+  bool enabled = 7;
+}
+
+message EngagementReward {
+  int32 level = 1;
+  string role_id = 2;
+}
+
+message EngagementMultiplier {
+  string role_id = 1;
+  double multiplier = 2;
+}
+
+message EngagementLevelsSettings {
+  bool enabled = 1;
+  int32 xp_min = 2;
+  int32 xp_max = 3;
+  int32 cooldown_seconds = 4;
+  // "off", "current" (the channel the member posted in) or "channel".
+  string announce = 5;
+  // Used when announce is "channel"; empty = none.
+  string announce_channel_id = 6;
+  string announce_message = 7;
+  // "stack" (keep every reward reached) or "highest" (only the highest).
+  string reward_mode = 8;
+  repeated EngagementReward rewards = 9;
+  repeated EngagementMultiplier multipliers = 10;
+  repeated string no_xp_channel_ids = 11;
+  repeated string no_xp_role_ids = 12;
+}
+
+message EngagementEconomySettings {
+  bool enabled = 1;
+  string currency_name = 2;
+  string currency_symbol = 3;
+  int32 daily_amount = 4;
+  int32 daily_streak_bonus = 5;
+  int32 daily_streak_cap = 6;
+  int32 work_min = 7;
+  int32 work_max = 8;
+}
+
+message EngagementSettings {
+  EngagementLevelsSettings levels = 1;
+  EngagementEconomySettings economy = 2;
+}
+
+message EngagementShopItem {
+  // 0 when creating.
+  int32 id = 1;
+  string name = 2;
+  string description = 3;
+  string role_id = 4;
+  // Filled in by the server.
+  string role_name = 5;
+  int32 price = 6;
+  // When false the item never sells out and `stock` is ignored.
+  bool limited = 7;
+  int32 stock = 8;
+}
+
+message EngagementShopList {
+  repeated EngagementShopItem items = 1;
+  EngagementCurrency currency = 2;
+  bool enabled = 3;
+}
+
+message EngagementIdRequest {
+  int32 id = 1;
+}
+
+message EngagementAdjustRequest {
+  string user_id = 1;
+  EngagementBoard board = 2;
+  // "give", "take", "set" or "reset".
+  string op = 3;
+  int32 amount = 4;
+}
+
+message EngagementMemberStats {
+  string user_id = 1;
+  string name = 2;
+  int32 xp = 3;
+  int32 level = 4;
+  int32 balance = 5;
+}
+
+message EngagementResetRequest {
+  EngagementBoard board = 1;
+}
+
+message EngagementResetResult {
+  // Members whose XP or balance was cleared.
+  int32 cleared = 1;
+}
+
+message EngagementChangeEvent {
+  // "engagement:xp", "engagement:money", "engagement:shop" or "engagement:config".
+  string area = 1;
+}
+
+service EngagementService {
+  // Everyone.
+  rpc GetMe(rootsdk.Void) returns (EngagementMe);
+  rpc GetLeaderboard(EngagementLeaderboardRequest) returns (EngagementLeaderboard);
+  rpc ListShop(rootsdk.Void) returns (EngagementShopList);
+  rpc Buy(EngagementIdRequest) returns (EngagementMe);
+  rpc ClaimDaily(rootsdk.Void) returns (EngagementClaimResult);
+  rpc Work(rootsdk.Void) returns (EngagementClaimResult);
+
+  // Admins.
+  rpc GetSettings(rootsdk.Void) returns (EngagementSettings);
+  rpc SaveLevels(EngagementLevelsSettings) returns (EngagementSettings);
+  rpc SaveEconomy(EngagementEconomySettings) returns (EngagementSettings);
+  rpc SaveShopItem(EngagementShopItem) returns (EngagementShopList);
+  rpc DeleteShopItem(EngagementIdRequest) returns (EngagementShopList);
+  rpc Adjust(EngagementAdjustRequest) returns (EngagementMemberStats);
+  rpc ResetBoard(EngagementResetRequest) returns (EngagementResetResult);
+
+  // To all clients when XP, balances, the shop or settings change
+  // (XP and balance changes are coalesced to one every few seconds).
+  rpc BroadcastEngagementChanged(EngagementChangeEvent) returns (rootsdk.Void);
+}

@@ -1,0 +1,16 @@
+{
+  "name": "@taproot/server",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "sqlite3": "^5.1.7"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "tsc -p tsconfig.test.json && node --test build-test/test/*.test.js",
+    "server": "node ../scripts/dev-manifest.js && rootsdk-devhost --project-folder=../ --manifest=root-manifest.dev.json",
+    "seed": "tsc -p devtools && node ../scripts/dev-manifest.js && node devtools/seed-manifest.js && rootsdk-devhost --project-folder=../ --manifest=root-manifest.seed.json",
+    "refresh": "tsc -p devtools && rootsdk-devhost --project-folder=../ --file=server/devtools-dist/devtools/refresh.js"
+  }
+}
